@@ -21,7 +21,15 @@ AutomergeBot's unit of work context is 2 branches: source branch (containing pus
 3. Try to merge pull request
    - If there are conflicts notify changes author and provides detailed instructions what to do
    - If merged successfully remove temporary branch
-
+   
+## Prepare to build
+1. SlackClientStandard is added as a submodule.
+   Init and update submodules
+   `git submodule update --init --recursive`
+   In case of future submodules updates you can use:
+   `git submodule update --recursive`
+2. Make appsettings.json from appsettings.json_template
+   
 ## How to install
 1. Build in a Release mode  
    `msbuild /p:Configuration=Release PerfectGym.AutomergeBot.sln`
