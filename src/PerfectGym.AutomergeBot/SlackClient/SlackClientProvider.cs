@@ -1,11 +1,15 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using PerfectGym.AutomergeBot.MergingBranches;
 using SlackClientStandard;
 
 namespace PerfectGym.AutomergeBot.SlackClient
 {
-    public class SlackClientProvider
+    public interface ISlackClientProvider
+    {
+        ISlackClient Create();
+    }
+
+    public class SlackClientProvider : ISlackClientProvider
     {
         private readonly ILogger<UserNotifier> _logger;
         private readonly SlackClientStandard.SlackClientProvider _slackClientProvider = new SlackClientStandard.SlackClientProvider();

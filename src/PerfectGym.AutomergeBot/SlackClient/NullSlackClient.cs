@@ -9,19 +9,14 @@ namespace PerfectGym.AutomergeBot.SlackClient
             //nop
         }
 
-        public void NotifyUserAboutScriptRejection(string author, string reviewer, string comment)
+        public void SendMessage(string message)
         {
             //nop
         }
 
-        public void NotifyUserAboutScriptExecution(string author, string result, string error)
+        public string FindUser(string user)
         {
-            //nop
-        }
-
-        public void NotifyUserAboutPendingPullRequest(string email, string repositoryUrl)
-        {
-            //nop
+            return string.Empty;
         }
     }
 }

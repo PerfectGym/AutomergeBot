@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +12,7 @@ using Microsoft.Extensions.Options;
 using PerfectGym.AutomergeBot.PullRequestsManualMergingGovernor;
 using PerfectGym.AutomergeBot.RepositoryConnection;
 using PerfectGym.AutomergeBot.SlackClient;
+using PerfectGym.AutomergeBot.SlackNotifications;
 using Serilog;
 
 namespace PerfectGym.AutomergeBot
@@ -40,7 +39,9 @@ namespace PerfectGym.AutomergeBot
 
             services.AddTransient<IRepositoryConnectionProvider, RepositoryConnectionProvider>();
             services.AddTransient<IGitHubEventHttpRequestHandler, GitHubEventHttpRequestHandler>();
-            services.AddTransient<SlackClientProvider>();
+            services.AddTransient<INow, DateTimeNow>();
+            services.AddTransient<ISlackMessageProvider, SlackMessageProvider>();
+            services.AddTransient<ISlackClientProvider, SlackClientProvider>();
             services.AddTransient<IUserNotifier, UserNotifier>();
 
             services.AddTransient<PullRequestsGovernor>();

@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Octokit;
 using PerfectGym.AutomergeBot.RepositoryConnection;
 using SlackClientStandard;
-using SlackClientProvider = PerfectGym.AutomergeBot.SlackClient.SlackClientProvider;
+using System.Collections.Generic;
+using System.Linq;
+using PerfectGym.AutomergeBot.SlackNotifications;
+using ISlackClientProvider = PerfectGym.AutomergeBot.SlackClient.ISlackClientProvider;
 
 namespace PerfectGym.AutomergeBot
 {
@@ -24,14 +26,17 @@ namespace PerfectGym.AutomergeBot
     public class UserNotifier : IUserNotifier
     {
         private readonly ILogger<UserNotifier> _logger;
-        private readonly SlackClientProvider _clientProvider;
+        private readonly ISlackClientProvider _clientProvider;
+        private readonly ISlackMessageProvider _messageProvider;
 
         public UserNotifier(
             ILogger<UserNotifier> logger,
-            SlackClientProvider clientProvider)
+            ISlackClientProvider clientProvider, 
+            ISlackMessageProvider messageProvider)
         {
             _logger = logger;
             _clientProvider = clientProvider;
+            _messageProvider = messageProvider;
         }
 
         public void NotifyUserAboutPullRequestWithUnresolvedConflicts(
@@ -66,32 +71,61 @@ namespace PerfectGym.AutomergeBot
 
         public void NotifyAboutOpenPullRequests(IEnumerable<PullRequest> filteredPullRequests)
         {
+            var pullRequests = filteredPullRequests.ToList();
+            var users = pullRequests.SelectMany(pr => pr.Assignees)
+                                              .Distinct(new UserComparer())
+                                              .ToList();
+
             using (var client = _clientProvider.Create())
             {
-                foreach (var pullRequest in filteredPullRequests)
+                foreach (var user in users)
                 {
+                    var userPullRequests = pullRequests.Where(pr => pr.Assignees.Contains(user));
                     try
                     {
-                        NotifyAssignedUsersBySlack(pullRequest, client);
+                        NotifyAssignedUsersBySlack(user, userPullRequests, client);
                     }
                     catch (SlackApiErrorException e)
                     {
-                        _logger.LogError(e, "Failed notifying users assigned to pull request {pullRequestNumber}", pullRequest.Number);
+                        _logger.LogError(e, "Failed notifying user {User}", user);
                     }
                 }
             }
         }
 
-        private static void NotifyAssignedUsersBySlack(PullRequest pullRequest, SlackClientStandard.ISlackClient client)
+        private void NotifyAssignedUsersBySlack(Account user, IEnumerable<PullRequest> pullRequests, ISlackClient client)
         {
-            var assignees = pullRequest.Assignees;
-            var pullRequestUrl = pullRequest.HtmlUrl;
+            var prs = pullRequests.Select(pr=>new PullRequestModel{Url= pr.HtmlUrl, CreatedAt = pr.CreatedAt});
+            var contact = user.Email ?? user.Login;
+            var author = client.FindUser(contact);
+            var message =_messageProvider.CreateNotifyUserAboutPendingPullRequestMessage(author,prs);
+            client.SendMessage(message);
+        }
 
-            foreach (var assignee in assignees)
+    }
+
+    internal class UserComparer : IEqualityComparer<User>
+    {
+        public bool Equals(User x, User y)
+        {
+            if(x == null && y == null)
             {
-                var contact = assignee.Email ?? assignee.Login;
-                client.NotifyUserAboutPendingPullRequest(contact, pullRequestUrl);
+                return true;
             }
+
+            if(x == null || y == null)
+            {
+                return false;
+            }
+
+            return string.Equals(x.Email,y.Email,StringComparison.InvariantCultureIgnoreCase) &&
+                   string.Equals(x.Login,y.Login,StringComparison.InvariantCultureIgnoreCase);
+
+        }
+
+        public int GetHashCode(User obj)
+        {
+            return (obj.Email?.ToLowerInvariant() + obj.Login?.ToLowerInvariant()).GetHashCode();
         }
     }
 }
