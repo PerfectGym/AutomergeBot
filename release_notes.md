@@ -38,3 +38,12 @@
 - Removing temporary branches which should not be removed (causes closing PR which is not merged).
   When merging from A->B and A->C closing PR[A->B] caused removing temporary branch of PR[A->C]. It was because they both have temporary branches with the same commit.
   Now only closing PR removes its temporary branch.
+
+
+### VERSION 1.2.2
+
+**Features**
+- Add to Slack notificaiton messages information how long given PR is open (diff between now and PR creation time)
+- Present all info in a single Slack message per user. Do not repeat formula: "please resolve conflicts manually, approve review and merge pull request"
+- Updated Instruction when conflicts occured. 
+If somebody's PR was not merged before ours then event after merging that PR the ours still has information about conflicting files. This information is outdated but GitHub does not updates it.
