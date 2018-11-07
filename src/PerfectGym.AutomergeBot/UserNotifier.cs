@@ -48,11 +48,17 @@ namespace PerfectGym.AutomergeBot
             string pullRequestUrl)
         {
             var comment = $"Cannot merge automatically. @{gitHubUserName} please resolve conflicts manually, approve review and merge pull request."
+                          + "\r\n"
+                          + "Be aware that when someone's PR has not been merged before yours PR and then has been merged,"
+                          + "\r\n"
+                          + "yours PR still has info about conflicts."
+                          + "\r\n"
+                          + "Github does not update it and lies that conflicts are present. "
                           + "\r\n\r\n"
                           + "How to do it (using the GIT command line):\r\n"
                           + $"1. Fetch changes from server and checkout '{destinationBranch}' branch\r\n"
                           + "   ```\r\n"
-                          + $"   git fetch && git checkout {destinationBranch} && " + "git reset --hard @{u}\r\n"
+                          + $"   git fetch -q && git checkout -q {destinationBranch} && " + "git reset -q --hard @{u}\r\n"
                           + "   ```\r\n"
                           + $"2. Merge 'origin/{pullRequestBranchName}' branch and resolve conflicts\r\n"
                           + "   ```\r\n"
