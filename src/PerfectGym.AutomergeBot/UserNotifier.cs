@@ -83,7 +83,8 @@ namespace PerfectGym.AutomergeBot
             {
                 foreach (var user in users)
                 {
-                    var userPullRequests = pullRequests.Where(pr => pr.Assignees.Contains(user));
+                    var userPullRequests = pullRequests.FindAll(pr => pr.Assignees.Contains(user,new UserComparer()));
+
                     try
                     {
                         NotifyAssignedUsersBySlack(user, userPullRequests, client);

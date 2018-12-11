@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -22,7 +24,10 @@ namespace PerfectGym.AutomergeBot.SlackNotifications
             
             stringBuilder.AppendLine(
                 $"<@{authorId}> please resolve conflicts manually, approve review and merge pull request");
-            foreach (var pullRequestUrl in pullRequests)
+            var pullRequestsOrdered = pullRequests.OrderBy(pr=>pr.CreatedAt)
+                .ToList();
+
+            foreach (var pullRequestUrl in pullRequestsOrdered)
             {
                 var duration = _now.Now() - pullRequestUrl.CreatedAt;
                 stringBuilder.Append($"PR open for: {duration.FormatAsDescriptiveForHuman()}");

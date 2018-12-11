@@ -36,14 +36,30 @@ namespace PerfectGym.AutomergeBot.Tests
                 .Returns(DateTimeOffset.MinValue);
 
             var userNotifier = new UserNotifier(new NullLogger<UserNotifier>(),slackClientProvider, new SlackMessageProvider(nowMock.Object));
-            var pullRequests = GetFakePRCollection();
-
+            var pullRequests = GetFakePRCollection().ToList();
+            
             //Act
             userNotifier.NotifyAboutOpenPullRequests(pullRequests);
 
             //Assert
-            slackClientMock.Verify(c=>c.SendMessage(It.IsAny<string>()),Times.Once);
+            var usersPullRequestsCount = pullRequests.Count();
+            slackClientMock.Verify(c=>c.SendMessage(It.Is<string>(m =>
+                CountStringOccurrences(WebUtility.UrlDecode(m), "PR open for")==usersPullRequestsCount
+                )),Times.Once);
 
+        }
+
+        public static int CountStringOccurrences(string text, string pattern)
+        {
+            // Loop through all instances of the string 'text'.
+            int count = 0;
+            int i = 0;
+            while ((i = text.IndexOf(pattern, i)) != -1)
+            {
+                i += pattern.Length;
+                count++;
+            }
+            return count;
         }
 
         [TestCase(1,1,48,0,"PR open for: 1 day(s) 1 hour(s) 48 min(s)")]
@@ -72,7 +88,7 @@ namespace PerfectGym.AutomergeBot.Tests
         }
 
         [Test]
-        public void MessageProvider_ForMultipleOpenPR_ResolveConflictPhraseOccursOnce()
+        public void MessageProvider_WhenUserHasTwoOpenPR_ResolveConflictPhraseOccursOnceAndPROpenOccursTwice()
         {
             //Arrrange
             var nowMock = new Mock<INow>();
@@ -89,13 +105,21 @@ namespace PerfectGym.AutomergeBot.Tests
             };
 
             //Act
-            var message = messageProvider.CreateNotifyUserAboutPendingPullRequestMessage("testUser",pullRequests);
+            var messageEncoded = messageProvider.CreateNotifyUserAboutPendingPullRequestMessage("testUser",pullRequests);
 
             //Assert
+            var message = WebUtility.UrlDecode(messageEncoded);
             var occurrences = message.Select((c, i) => message.Substring(i))
                 .Count(sub => sub.StartsWith("resolve"));
 
-            Assert.AreEqual(1,occurrences);
+            Assert.AreEqual(1,occurrences, "Message contains more than 1 'resolve' word");
+
+            var prOpenOccurrences =  message.Select((c, i) => message.Substring(i))
+                .Count(sub => sub.StartsWith("PR open for"));
+
+            var pullRequestsCount = pullRequests.Length;
+            Assert.AreEqual(pullRequestsCount, prOpenOccurrences, "Message mentions wrong number of the pull requests");
+
         }
 
         private static IEnumerable<PullRequest> GetFakePRCollection()
