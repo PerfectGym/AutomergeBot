@@ -23,8 +23,18 @@ namespace PerfectGym.AutomergeBot
 
         public Startup(IHostingEnvironment hostingEnvironment, IConfiguration configuration)
         {
-            _configuration = configuration;
+            _configuration = BuildConfiguration(hostingEnvironment);
             Logging.EnsureLoggingInitialized(hostingEnvironment.ContentRootPath);
+        }
+
+        private IConfiguration BuildConfiguration(IHostingEnvironment hostingEnvironment)
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(hostingEnvironment.ContentRootPath)
+                .AddJsonFile("appsettings.json", false, true)
+                .AddJsonFile("slackUserMappings.json", true, true);
+
+            return builder.Build();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -36,6 +46,7 @@ namespace PerfectGym.AutomergeBot
                 .SetMinimumLevel(LogLevel.Trace)
                 .AddSerilog(dispose: true));
             services.Configure<AutomergeBotConfiguration>(_configuration);
+            services.Configure<SlackUserMappingsConfiguration>(_configuration);
 
             services.AddTransient<IRepositoryConnectionProvider, RepositoryConnectionProvider>();
             services.AddTransient<IGitHubEventHttpRequestHandler, GitHubEventHttpRequestHandler>();

@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SlackClientStandard;
+using SlackClientStandard.Entities;
 
 namespace PerfectGym.AutomergeBot.SlackClient
 {
@@ -14,13 +17,16 @@ namespace PerfectGym.AutomergeBot.SlackClient
         private readonly ILogger<UserNotifier> _logger;
         private readonly SlackClientStandard.SlackClientProvider _slackClientProvider = new SlackClientStandard.SlackClientProvider();
         private readonly AutomergeBotConfiguration _cfg;
+        private readonly SlackUserMappingsConfiguration _mappingsCfg;
 
         public SlackClientProvider(
             ILogger<UserNotifier> logger,
-            IOptionsMonitor<AutomergeBotConfiguration> cfg)
+            IOptionsMonitor<AutomergeBotConfiguration> cfg,
+            IOptionsMonitor<SlackUserMappingsConfiguration> mappingsCfg)
         {
             _logger = logger;
             _cfg = cfg.CurrentValue;
+            _mappingsCfg = mappingsCfg.CurrentValue;
         }
 
         public ISlackClient Create()
@@ -46,7 +52,19 @@ namespace PerfectGym.AutomergeBot.SlackClient
             return _slackClientProvider.CreateClient(
                 _cfg.PullRequestGovernorConfiguration.SlackToken,
                 _cfg.PullRequestGovernorConfiguration.SlackChannels,
-                _cfg.AutomergeBotGitHubUserName);
+                _cfg.AutomergeBotGitHubUserName,
+                GetSlackUserMappings());
+        }
+
+        private List<SlackUserMapping> GetSlackUserMappings()
+        {
+            return _mappingsCfg?.UserMappings?
+                .Select(m => new SlackUserMapping
+                {
+                    Email = m.Email,
+                    SomeUserName = m.SomeUserName
+                })
+                .ToList();
         }
     }
 }

@@ -1,0 +1,12 @@
+{
+  "UserMappings" :  [
+    {
+      "Email" : "test@domain.com",
+      "SomeUserName" : "test" 
+    },
+    {
+      "Email" : "jon@domain.com",
+      "SomeUserName" : "jj2" 
+    }
+  ] 
+}
