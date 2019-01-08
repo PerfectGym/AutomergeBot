@@ -52,7 +52,9 @@ If somebody's PR was not merged before ours then event after merging that PR the
 ### VERSION 1.2.3
 
 **Features**
-- Possible to configure mapping from github user's email to Slack nick to make Slack mentions working for all developers.
+- Possible to configure mapping from github user's email to Slack nick.
+  These mappings are used by SlackClient to put correct direct mentions inside notifications.
 - Order not merged PR's notifications on the Slack from the newest to the oldest
 - Simplified steps in the message in case of conflicts - 2 command lines  changed to 1 command line. 
   It makes impoosible for the human to mistakenly execute 2nd command line step if the former failed.
+  
