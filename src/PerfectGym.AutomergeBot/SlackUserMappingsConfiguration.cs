@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using PerfectGym.AutomergeBot.Models;
 
 namespace PerfectGym.AutomergeBot
 {
     public class SlackUserMappingsConfiguration
     {
-        public List<EmailToSomeUserNameMapping> UserMappings { get; set; }
+        public List<GitHubUserEmailToSlackUserNameMappingEntry> UserMappings { get; set; }
     }
 }

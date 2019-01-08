@@ -61,8 +61,8 @@ namespace PerfectGym.AutomergeBot.SlackClient
             return _mappingsCfg?.UserMappings?
                 .Select(m => new SlackUserMapping
                 {
-                    Email = m.Email,
-                    SomeUserName = m.SomeUserName
+                    SomeUserName = m.GitHubUserName,
+                    Email = m.SlackUserEmail
                 })
                 .ToList();
         }

@@ -1,12 +1,12 @@
 {
-  "UserMappings" :  [
-    {
-      "Email" : "test@domain.com",
-      "SomeUserName" : "test" 
-    },
-    {
-      "Email" : "jon@domain.com",
-      "SomeUserName" : "jj2" 
-    }
-  ] 
+    "UserMappings": [
+        {
+            "GitHubUserName": "test",
+            "SlackUserEmail": "test@domain.com"
+        },
+        {
+            "GitHubUserName": "jj2",
+            "SlackUserEmail": "jon@domain.com"
+        }
+    ]
 }
