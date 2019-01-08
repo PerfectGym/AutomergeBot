@@ -49,7 +49,7 @@
 If somebody's PR was not merged before ours then event after merging that PR the ours still has information about conflicting files. This information is outdated but GitHub does not updates it.
 
 
-### VERSION 1.3.0
+### VERSION 1.2.3
 
 **Features**
 - Possible to configure mapping from github user's email to Slack nick.
