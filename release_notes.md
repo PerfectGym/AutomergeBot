@@ -47,3 +47,12 @@
 - Present all info in a single Slack message per user. Do not repeat formula: "please resolve conflicts manually, approve review and merge pull request"
 - Updated Instruction when conflicts occured. 
 If somebody's PR was not merged before ours then event after merging that PR the ours still has information about conflicting files. This information is outdated but GitHub does not updates it.
+
+
+### VERSION 1.2.3
+
+**Features**
+- Possible to configure mapping from github user's email to Slack nick to make Slack mentions working for all developers.
+- Order not merged PR's notifications on the Slack from the newest to the oldest
+- Simplified steps in the message in case of conflicts - 2 command lines  changed to 1 command line. 
+  It makes impoosible for the human to mistakenly execute 2nd command line step if the former failed.
