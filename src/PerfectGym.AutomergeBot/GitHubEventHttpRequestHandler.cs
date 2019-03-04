@@ -7,7 +7,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using PerfectGym.AutomergeBot.MergingBranches;
+using PerfectGym.AutomergeBot.Services.MergingBranches;
+using PerfectGym.AutomergeBot.Services.TempBranchesRemoving;
 
 namespace PerfectGym.AutomergeBot
 {
@@ -115,7 +116,7 @@ namespace PerfectGym.AutomergeBot
         private void HandlePullRequestEvent(HttpContext context, string payloadJson)
         {
             var pullrequestPayload = JsonConvert.DeserializeObject<JObject>(payloadJson);
-            var pullRequestHandler = context.RequestServices.GetRequiredService<TempBranchesRemoving.ITempBranchesRemoverPullRequestHandler>();
+            var pullRequestHandler = context.RequestServices.GetRequiredService<ITempBranchesRemoverPullRequestHandler>();
             var pullRequestInfoModel = PullRequestInfoModel.CreateFromPayload(pullrequestPayload);
 
             _logger.LogInformation("Started processing pull_request notification {@payloadModel}", pullRequestInfoModel);

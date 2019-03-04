@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 using Octokit;
 using PerfectGym.AutomergeBot.RepositoryConnection;
 
-namespace PerfectGym.AutomergeBot.PullRequestsManualMergingGovernor
+namespace PerfectGym.AutomergeBot.Services.PullRequestsManualMergingGovernor
 {
     /// <summary>
     /// Used to check if there are any open pull requests that should be closed (i.e. PRs created by AutoMergeBot)

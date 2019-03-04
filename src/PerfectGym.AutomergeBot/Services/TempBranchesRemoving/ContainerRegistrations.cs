@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace PerfectGym.AutomergeBot.TempBranchesRemoving
+namespace PerfectGym.AutomergeBot.Services.TempBranchesRemoving
 {
-    public static class Registrations
+    public class ContainerRegistrations : IContainerRegistrations
     {
-        public static void ConfigureServices(IServiceCollection services)
+        public void DoRegistrations(IServiceCollection services)
         {
             services.AddTransient<ITempBranchesRemoverPullRequestHandler, TempBranchesRemoverPullRequestHandlerPullRequestHandler>();
         }

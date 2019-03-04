@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using PerfectGym.AutomergeBot.Models;
 using PerfectGym.AutomergeBot.RepositoryConnection;
 
-namespace PerfectGym.AutomergeBot.TempBranchesRemoving
+namespace PerfectGym.AutomergeBot.Services.TempBranchesRemoving
 {
     public interface ITempBranchesRemoverPullRequestHandler
     {

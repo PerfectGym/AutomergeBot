@@ -7,7 +7,7 @@ using Octokit;
 using PerfectGym.AutomergeBot.Models;
 using PerfectGym.AutomergeBot.RepositoryConnection;
 
-namespace PerfectGym.AutomergeBot.MergingBranches
+namespace PerfectGym.AutomergeBot.Services.MergingBranches
 {
     public interface IMergePerformer
     {

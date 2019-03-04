@@ -1,16 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace PerfectGym.AutomergeBot.MergingBranches
+namespace PerfectGym.AutomergeBot.Services.MergingBranches
 {
-    public static class Registrations
+    public class ContainerRegistrations : IContainerRegistrations
     {
-        public static void ConfigureServices(IServiceCollection services)
+        public void DoRegistrations(IServiceCollection services)
         {
             services.AddTransient<MergingBranchesPushHandler>();
             services.AddTransient<IProcessPushPredicate, ProcessPushPredicate>();
             services.AddTransient<IMergePerformer, MergePerformer>();
             services.AddTransient<IPullRequestMergeRetryier, PullRequestMergeRetryier>();
-            
+
             var mergeDirectionsProviderInstance = new MergeDirectionsProvider();
             services.AddSingleton<IMergeDirectionsProviderConfigurator>(mergeDirectionsProviderInstance);
             services.AddSingleton<IMergeDirectionsProvider>(mergeDirectionsProviderInstance);
