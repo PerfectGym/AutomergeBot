@@ -72,7 +72,7 @@ namespace PerfectGym.AutomergeBot
                 app.UseDeveloperExceptionPage();
             }
 
-            UpdateMergeDirectionsProviderConfiguration(app.ApplicationServices);
+            InitiallyLoadMergeDirectionsFromConfig(app);
 
             RegisterConfigurationChangedHandler(app);
             LogConfigurationUsed(app.ApplicationServices, logger);
@@ -82,13 +82,18 @@ namespace PerfectGym.AutomergeBot
             logger.LogInformation("Started");
         }
 
+        private void InitiallyLoadMergeDirectionsFromConfig(IApplicationBuilder app)
+        {
+            UpdateMergeDirectionsProviderConfiguration(app.ApplicationServices);
+        }
+
         private static void StartPullRequestsGovernor(IApplicationBuilder app)
         {
             var pullRequestGovernor = app.ApplicationServices.GetRequiredService<Services.PullRequestsManualMergingGovernor.PullRequestsGovernor>();
             pullRequestGovernor.StartWorker();
         }
 
-        private void UpdateMergeDirectionsProviderConfiguration(IServiceProvider serviceProvider)
+        private static void UpdateMergeDirectionsProviderConfiguration(IServiceProvider serviceProvider)
         {
             var cfg = serviceProvider.GetRequiredService<IOptionsMonitor<AutomergeBotConfiguration>>().CurrentValue;
             var mergeDirectionsProviderConfigurator = serviceProvider.GetRequiredService<Services.MergingBranches.IMergeDirectionsProviderConfigurator>();
@@ -96,13 +101,13 @@ namespace PerfectGym.AutomergeBot
             mergeDirectionsProviderConfigurator.UpdateMergeDirections(cfg.MergeDirectionsParsed);
         }
 
-        private void RegisterConfigurationChangedHandler(IApplicationBuilder app)
+        private static void RegisterConfigurationChangedHandler(IApplicationBuilder app)
         {
             var cfg = app.ApplicationServices.GetRequiredService<IOptionsMonitor<AutomergeBotConfiguration>>();
             cfg.OnChange((a, b) => { OnConfigurationChanged(app.ApplicationServices); });
         }
 
-        private void OnConfigurationChanged(IServiceProvider serviceProvider)
+        private static void OnConfigurationChanged(IServiceProvider serviceProvider)
         {
             var logger = serviceProvider.GetRequiredService<ILogger<Startup>>();
             logger.LogInformation("Configuration has been changed");
