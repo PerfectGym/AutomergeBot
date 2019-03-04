@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Octokit;
 using PerfectGym.AutomergeBot.RepositoryConnection;
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using PerfectGym.AutomergeBot.SlackNotifications;
 using SlackClientStandard;
@@ -82,7 +83,7 @@ namespace PerfectGym.AutomergeBot.UserNotifications
 
         private static string GetMessageTemplate(string messageType)
         {
-            var path = Path.Combine(@"UserNotifications\MessageTemplates", messageType + ".txt");
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"UserNotifications\MessageTemplates", messageType + ".txt");
             return File.ReadAllText(path);
         }
 
