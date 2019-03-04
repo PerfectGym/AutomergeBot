@@ -4,6 +4,8 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Octokit;
 using PerfectGym.AutomergeBot.RepositoryConnection;
+using System.IO;
+using System.Runtime.CompilerServices;
 using PerfectGym.AutomergeBot.SlackNotifications;
 using SlackClientStandard;
 using ISlackClientProvider = PerfectGym.AutomergeBot.SlackClient.ISlackClientProvider;
@@ -31,7 +33,7 @@ namespace PerfectGym.AutomergeBot.UserNotifications
 
         public UserNotifier(
             ILogger<UserNotifier> logger,
-            ISlackClientProvider clientProvider, 
+            ISlackClientProvider clientProvider,
             ISlackMessageProvider messageProvider)
         {
             _logger = logger;
@@ -47,29 +49,41 @@ namespace PerfectGym.AutomergeBot.UserNotifications
             string destinationBranch,
             string pullRequestUrl)
         {
-            var comment = $"Cannot merge automatically. @{gitHubUserName} please resolve conflicts manually, approve review and merge pull request."
-                          + "\r\n"
-                          + "Be aware that when someone's PR has not been merged before yours PR and then has been merged,"
-                          + "\r\n"
-                          + "yours PR still has info about conflicts."
-                          + "\r\n"
-                          + "Github does not update it and lies that conflicts are present. "
-                          + "\r\n\r\n"
-                          + "How to do it (using the GIT command line):\r\n"
-                          + $"1. Fetch changes from server and checkout '{destinationBranch}' branch.\r\n"
-                          + $"   Then merge 'origin/{pullRequestBranchName}' branch and resolve conflicts\r\n"
-                          + "   ```\r\n"
-                          + $"   git fetch -q && git checkout -q {destinationBranch} && " + "git reset -q --hard @{u} && "+$"git merge --no-ff origin/{pullRequestBranchName}\r\n"
-                          + "   ```\r\n"
-                          + $"2. Approve [pull request]({pullRequestUrl}/files#submit-review) review\r\n"
-                          + $"3. Push changes to {destinationBranch}\r\n"
-                          + "   ```\r\n"
-                          + $"   git push origin {destinationBranch}\r\n"
-                          + "   ```\r\n";
+
+            var comment = CreateMessage(pullRequestNumber, gitHubUserName, pullRequestBranchName, destinationBranch, pullRequestUrl);
 
             repoContext.AddPullRequestComment(pullRequestNumber, comment);
             repoContext.AddReviewerToPullRequest(pullRequestNumber, new[] { gitHubUserName });
             repoContext.AssignUsersToPullRequest(pullRequestNumber, new[] { gitHubUserName });
+        }
+
+        private string CreateMessage(int pullRequestNumber, string gitHubUserName, string pullRequestBranchName, string destinationBranch, string pullRequestUrl)
+        {
+            const string fallbackMessage = "Cannot merge automatically. ";
+            const string messageType = "NotifyUserAboutPullRequestWithUnresolvedConflicts";
+
+            try
+            {
+                var comment = GetMessageTemplate(messageType);
+                comment = comment
+                    .Replace("{{pullRequestNumber}}", pullRequestNumber.ToString())
+                    .Replace("{{gitHubUserName}}", gitHubUserName)
+                    .Replace("{{pullRequestBranchName}}", pullRequestBranchName)
+                    .Replace("{{destinationBranch}}", destinationBranch)
+                    .Replace("{{pullRequestUrl}}", pullRequestUrl);
+                return comment;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Could not create message {messageType} from template", messageType);
+                return fallbackMessage;
+            }
+        }
+
+        private static string GetMessageTemplate(string messageType)
+        {
+            var path = Path.Combine(@"UserNotifications\MessageTemplates", messageType + ".txt");
+            return File.ReadAllText(path);
         }
 
         public void NotifyAboutOpenPullRequests(IEnumerable<PullRequest> filteredPullRequests)
@@ -83,7 +97,7 @@ namespace PerfectGym.AutomergeBot.UserNotifications
             {
                 foreach (var user in users)
                 {
-                    var userPullRequests = pullRequests.FindAll(pr => pr.Assignees.Contains(user,new UserComparer()));
+                    var userPullRequests = pullRequests.FindAll(pr => pr.Assignees.Contains(user, new UserComparer()));
 
                     try
                     {
@@ -99,10 +113,10 @@ namespace PerfectGym.AutomergeBot.UserNotifications
 
         private void NotifyAssignedUsersBySlack(Account user, IEnumerable<PullRequest> pullRequests, ISlackClient client)
         {
-            var prs = pullRequests.Select(pr=>new PullRequestModel{Url= pr.HtmlUrl, CreatedAt = pr.CreatedAt});
+            var prs = pullRequests.Select(pr => new PullRequestModel { Url = pr.HtmlUrl, CreatedAt = pr.CreatedAt });
             var contact = user.Email ?? user.Login;
             var author = client.FindUser(contact);
-            var message =_messageProvider.CreateNotifyUserAboutPendingPullRequestMessage(author,prs);
+            var message = _messageProvider.CreateNotifyUserAboutPendingPullRequestMessage(author, prs);
             client.SendMessage(message);
         }
 
@@ -112,18 +126,18 @@ namespace PerfectGym.AutomergeBot.UserNotifications
     {
         public bool Equals(User x, User y)
         {
-            if(x == null && y == null)
+            if (x == null && y == null)
             {
                 return true;
             }
 
-            if(x == null || y == null)
+            if (x == null || y == null)
             {
                 return false;
             }
 
-            return string.Equals(x.Email,y.Email,StringComparison.InvariantCultureIgnoreCase) &&
-                   string.Equals(x.Login,y.Login,StringComparison.InvariantCultureIgnoreCase);
+            return string.Equals(x.Email, y.Email, StringComparison.InvariantCultureIgnoreCase) &&
+                   string.Equals(x.Login, y.Login, StringComparison.InvariantCultureIgnoreCase);
 
         }
 

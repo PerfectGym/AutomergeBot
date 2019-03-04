@@ -1,0 +1,8 @@
+﻿ Available placeholders:
+  {{gitHubUserName}}
+  {{pullRequestNumber}}
+  {{pullRequestBranchName}}
+  {{destinationBranch}}
+  {{pullRequestUrl}}
+
+  

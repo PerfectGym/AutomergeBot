@@ -6,6 +6,15 @@
 
   <ItemGroup>
     <None Remove="slackUserMappings.json" />
+    <None Remove="UserNotifications\MessageTemplates\NotifyUserAboutPullRequestWithUnresolvedConflicts.txt" />
+    <None Remove="UserNotifications\MessageTemplates\NotifyUserAboutPullRequestWithUnresolvedConflicts_placeholders.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="UserNotifications\MessageTemplates\NotifyUserAboutPullRequestWithUnresolvedConflicts_placeholders.txt" />
+    <Content Include="UserNotifications\MessageTemplates\NotifyUserAboutPullRequestWithUnresolvedConflicts.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

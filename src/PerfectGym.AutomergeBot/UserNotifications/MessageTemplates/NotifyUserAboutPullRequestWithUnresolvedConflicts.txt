@@ -1,0 +1,16 @@
+﻿Cannot merge automatically. @{{gitHubUserName}} please resolve conflicts manually, approve review and merge pull request.
+Be aware that when someone's PR has not been merged before yours PR and then has been merged,
+yours PR still has info about conflicts.
+Github does not update it and lies that conflicts are present. 
+
+How to do it (using the GIT command line):
+1. Fetch changes from server and checkout '{{destinationBranch}}' branch.
+   Then merge 'origin/{{pullRequestBranchName}}' branch and resolve conflicts
+   ```
+   git fetch -q && git checkout -q {{destinationBranch}} && git reset -q --hard @{u} && git merge --no-ff origin/{{pullRequestBranchName}}
+   ```
+2. Approve [pull request]({{pullRequestUrl}}/files#submit-review) review
+3. Push changes to {{destinationBranch}}
+   ```
+   git push origin {{destinationBranch}}
+   ```
