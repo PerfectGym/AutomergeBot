@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using PerfectGym.AutomergeBot.RepositoryConnection;
 using PerfectGym.AutomergeBot.SlackClient;
 using PerfectGym.AutomergeBot.SlackNotifications;
+using PerfectGym.AutomergeBot.UserNotifications;
 using Serilog;
 
 

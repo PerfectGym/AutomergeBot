@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using PerfectGym.AutomergeBot.RepositoryConnection;
 using PerfectGym.AutomergeBot.SlackNotifications;
+using PerfectGym.AutomergeBot.UserNotifications;
 using SlackClientStandard;
 using ISlackClientProvider = PerfectGym.AutomergeBot.SlackClient.ISlackClientProvider;
 

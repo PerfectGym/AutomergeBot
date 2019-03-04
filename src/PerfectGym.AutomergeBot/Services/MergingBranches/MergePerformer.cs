@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Octokit;
 using PerfectGym.AutomergeBot.Models;
 using PerfectGym.AutomergeBot.RepositoryConnection;
+using PerfectGym.AutomergeBot.UserNotifications;
 
 namespace PerfectGym.AutomergeBot.Services.MergingBranches
 {

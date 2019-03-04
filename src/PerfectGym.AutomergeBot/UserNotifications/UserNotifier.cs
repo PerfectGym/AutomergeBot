@@ -1,14 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using Octokit;
 using PerfectGym.AutomergeBot.RepositoryConnection;
-using SlackClientStandard;
-using System.Collections.Generic;
-using System.Linq;
 using PerfectGym.AutomergeBot.SlackNotifications;
+using SlackClientStandard;
 using ISlackClientProvider = PerfectGym.AutomergeBot.SlackClient.ISlackClientProvider;
 
-namespace PerfectGym.AutomergeBot
+namespace PerfectGym.AutomergeBot.UserNotifications
 {
     public interface IUserNotifier
     {
