@@ -10,8 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PerfectGym.AutomergeBot.RepositoryConnection;
-using PerfectGym.AutomergeBot.SlackClient;
-using PerfectGym.AutomergeBot.SlackNotifications;
 using PerfectGym.AutomergeBot.UserNotifications;
 using Serilog;
 
@@ -47,13 +45,12 @@ namespace PerfectGym.AutomergeBot
                 .SetMinimumLevel(LogLevel.Trace)
                 .AddSerilog(dispose: true));
             services.Configure<AutomergeBotConfiguration>(_configuration);
-            services.Configure<SlackUserMappingsConfiguration>(_configuration);
+            new SlackClient.ContainerRegistrations(_configuration).DoRegistrations(services);
+
 
             services.AddTransient<IRepositoryConnectionProvider, RepositoryConnectionProvider>();
             services.AddTransient<IGitHubEventHttpRequestHandler, GitHubEventHttpRequestHandler>();
-            services.AddTransient<INow, DateTimeNow>();
-            services.AddTransient<ISlackMessageProvider, SlackMessageProvider>();
-            services.AddTransient<ISlackClientProvider, SlackClientProvider>();
+            new SlackNotifications.ContainerRegistrations().DoRegistrations(services);
             services.AddTransient<IUserNotifier, UserNotifier>();
 
             new Services.MergingBranches.ContainerRegistrations().DoRegistrations(services);

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace PerfectGym.AutomergeBot.Services
+namespace PerfectGym.AutomergeBot
 {
     public interface IContainerRegistrations
     {
