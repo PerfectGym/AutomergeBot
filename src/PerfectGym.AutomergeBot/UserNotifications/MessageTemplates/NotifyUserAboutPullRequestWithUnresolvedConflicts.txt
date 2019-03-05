@@ -3,7 +3,25 @@ Be aware that when someone's PR has not been merged before yours PR and then has
 yours PR still has info about conflicts.
 Github does not update it and lies that conflicts are present. 
 
-How to do it (using the GIT command line):
+**How to do it (using the GIT command line):**
+1. Merge code from `{{destinationBranch}}` into your pull request and resolve conflicts.
+   ```
+   git fetch -q && git checkout -q -B {{pullRequestBranchName}} {{destinationBranch}} && git merge --no-ff origin/{{pullRequestBranchName}} 
+   ```
+   >Explanation: we do small hack here - PR's branch locally reset to destination branch and then merge PR's actual branch to it.
+2. Push the code with resolved conflicts
+   ```
+   git push origin {{pullRequestBranchName}}:{{pullRequestBranchName}}
+   ```
+3. Wait until TeamCity (CI) mark pull request as OK. It should take no more than 20minutes after pushing last change.
+4. Approve [pull request]({{pullRequestUrl}}/files#submit-review) review
+5. Merge [pull request]({{pullRequestUrl}}). 
+   Remember to preserve (*Merge commit*) only meaningful commits with Jira task Id in the subject. 
+   If there are no meaningful commits squash them (*Squash and merge*)
+
+-----
+
+If the instruction above from some reason is not working for You please use older instruction:
 1. Fetch changes from server and checkout '{{destinationBranch}}' branch.
    Then merge 'origin/{{pullRequestBranchName}}' branch and resolve conflicts
    ```
@@ -14,3 +32,4 @@ How to do it (using the GIT command line):
    ```
    git push origin {{destinationBranch}}
    ```
+
