@@ -6,7 +6,7 @@ Github does not update it and lies that conflicts are present.
 **How to do it (using the GIT command line):**
 1. Merge code from `{{destinationBranch}}` into your pull request and resolve conflicts.
    ```
-   git fetch -q && git checkout -q -B {{pullRequestBranchName}} {{destinationBranch}} && git merge --no-ff origin/{{pullRequestBranchName}} 
+   git fetch -q && git checkout -q -B {{pullRequestBranchName}} origin/{{destinationBranch}} && git merge --no-ff origin/{{pullRequestBranchName}} 
    ```
    >Explanation: we do small hack here - PR's branch locally reset to destination branch and then merge PR's actual branch to it.
 2. Push the code with resolved conflicts
