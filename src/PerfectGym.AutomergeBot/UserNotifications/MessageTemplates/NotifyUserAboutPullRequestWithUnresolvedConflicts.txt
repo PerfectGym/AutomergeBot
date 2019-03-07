@@ -3,7 +3,7 @@ Be aware that when someone's PR has not been merged before yours PR and then has
 yours PR still has info about conflicts.
 Github does not update it and lies that conflicts are present. 
 
-**How to do it (using the GIT command line):**
+**How to do it** (using the **GIT Bash** command line):
 1. Merge code from `{{destinationBranch}}` into your pull request and resolve conflicts.
    ```
    git fetch -q && git checkout -q -B {{pullRequestBranchName}} origin/{{destinationBranch}} && git merge --no-ff origin/{{pullRequestBranchName}} 
@@ -18,10 +18,13 @@ Github does not update it and lies that conflicts are present.
 5. Merge [pull request]({{pullRequestUrl}}). 
    Remember to preserve (*Merge commit*) only meaningful commits with Jira task Id in the subject. 
    If there are no meaningful commits squash them (*Squash and merge*)
-
+6. Remove temporary branch from Your computer
+   ```
+   git checkout - && git branch -D {{pullRequestBranchName}}
+   ```
 -----
 
-If the instruction above from some reason is not working for You please use older instruction:
+If the instruction above from some reason is not working for You please try to use older instruction:
 1. Fetch changes from server and checkout '{{destinationBranch}}' branch.
    Then merge 'origin/{{pullRequestBranchName}}' branch and resolve conflicts
    ```
