@@ -1,4 +1,7 @@
-﻿Cannot merge automatically. @{{gitHubUserName}} please resolve conflicts manually, approve review and merge pull request.
+﻿Cannot merge automatically. 
+There is required check pending or need to resolve merge conflicts manually.
+  
+@{{gitHubUserName}} please resolve conflicts manually, approve review and merge pull request.
 Be aware that when someone's PR has not been merged before yours PR and then has been merged,
 yours PR still has info about conflicts.
 Github does not update it and lies that conflicts are present. 
@@ -24,15 +27,19 @@ Github does not update it and lies that conflicts are present.
    ```
 -----
 
-If the instruction above from some reason is not working for You please try to use older instruction:
-1. Fetch changes from server and checkout '{{destinationBranch}}' branch.
-   Then merge 'origin/{{pullRequestBranchName}}' branch and resolve conflicts
-   ```
-   git fetch -q && git checkout -q {{destinationBranch}} && git reset -q --hard @{u} && git merge --no-ff origin/{{pullRequestBranchName}}
-   ```
-2. Approve [pull request]({{pullRequestUrl}}/files#submit-review) review
-3. Push changes to {{destinationBranch}}
-   ```
-   git push origin {{destinationBranch}}
-   ```
+If the instruction above from some reason is not working for You please try to use older instruction
+
+**Important: tell about it on #developers-news !**
+*The old instruction will be removed soon...*
+
+>1. Fetch changes from server and checkout '{{destinationBranch}}' branch.
+>   Then merge 'origin/{{pullRequestBranchName}}' branch and resolve conflicts
+>   ```
+>   git fetch -q && git checkout -q {{destinationBranch}} && git reset -q --hard @{u} && git merge --no-ff origin/{{pullRequestBranchName}}
+>   ```
+>2. Approve [pull request]({{pullRequestUrl}}/files#submit-review) review
+>3. Push changes to {{destinationBranch}}
+>   ```
+>   git push origin {{destinationBranch}}
+>   ```
 
