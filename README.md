@@ -26,6 +26,8 @@ AutomergeBot's unit of work context is 2 branches: source branch (containing pus
 1. SlackClientStandard is added as a submodule.
    Init and update submodules
    `git submodule update --init --recursive`
+   To execute the comand you have to set SSH Key
+   (https://jdblischak.github.io/2014-09-18-chicago/novice/git/05-sshkeys.html)
    In case of future submodules updates you can use:
    `git submodule update --recursive`
 2. Make appsettings.json from appsettings.json_template
