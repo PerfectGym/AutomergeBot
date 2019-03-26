@@ -14,7 +14,6 @@ namespace PerfectGym.AutomergeBot.Models
             bool forced,
             bool deleted,
             string headCommitCommitterUserName,
-            string headCommitCommitterEmail,
             string headCommitAuthorUserName,
             string headCommitAuthorEmail,
             List<string> commitsShas)
@@ -26,7 +25,6 @@ namespace PerfectGym.AutomergeBot.Models
             Forced = forced;
             Deleted = deleted;
             HeadCommitCommitterUserName = headCommitCommitterUserName;
-            HeadCommitCommitterEmail = headCommitCommitterEmail;
             HeadCommitAuthorUserName = headCommitAuthorUserName;
             HeadCommitAuthorEmail = headCommitAuthorEmail;
             CommitsShas = commitsShas;
@@ -39,7 +37,6 @@ namespace PerfectGym.AutomergeBot.Models
         public bool Forced { get; }
         public bool Deleted { get; }
         public string HeadCommitCommitterUserName { get; }
-        public string HeadCommitCommitterEmail { get;  }
         public string HeadCommitAuthorUserName { get; }
         public string HeadCommitAuthorEmail { get; }
         public List<string> CommitsShas { get; }
@@ -64,7 +61,6 @@ namespace PerfectGym.AutomergeBot.Models
                 pushPayload["forced"].Value<bool>(),
                 pushPayload["deleted"].Value<bool>(),
                 SafeGet<string>(pushPayload, "head_commit.committer.username") ?? SafeGet<string>(pushPayload, "head_commit.committer.name"),
-                SafeGet<string>(pushPayload, "head_commit.committer.email"),
                 SafeGet<string>(pushPayload, "head_commit.author.username") ?? SafeGet<string>(pushPayload, "head_commit.author.name"),
                 SafeGet<string>(pushPayload, "head_commit.author.email"),
                 GetCommitsShas(pushPayload, "commits")

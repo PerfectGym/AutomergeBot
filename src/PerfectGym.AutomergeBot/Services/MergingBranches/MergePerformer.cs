@@ -109,8 +109,7 @@ namespace PerfectGym.AutomergeBot.Services.MergingBranches
 
         private static string CreateCoAuthoredByMessageForNewPullRequest(PushInfoModel pushInfo)
         {
-            // we use "author" name but actually we store there changes committer name because it is the person which will be responsible for merging down process
-            return $"Co-authored-by: {pushInfo.HeadCommitCommitterUserName} <{pushInfo.HeadCommitCommitterEmail}>";
+            return $"Co-authored-by: {pushInfo.HeadCommitAuthorUserName} <{pushInfo.HeadCommitAuthorEmail}>";
         }
 
         private static string CreateMergeCommitMessage(PullRequest pullRequest, string coAuthorString)
