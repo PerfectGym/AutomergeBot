@@ -109,8 +109,8 @@ namespace PerfectGym.AutomergeBot
         {
             var logger = serviceProvider.GetRequiredService<ILogger<Startup>>();
             logger.LogInformation("Configuration has been changed");
-            LogConfigurationUsed(serviceProvider, logger);
             UpdateMergeDirectionsProviderConfiguration(serviceProvider);
+            LogConfigurationUsed(serviceProvider, logger);
         }
 
         private static async Task HandleRequest(HttpContext context)
