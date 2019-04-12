@@ -5,10 +5,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Octokit;
 using PerfectGym.AutomergeBot.Models;
+using PerfectGym.AutomergeBot.Notifications.UserNotifications;
 using PerfectGym.AutomergeBot.RepositoryConnection;
-using PerfectGym.AutomergeBot.UserNotifications;
 
-namespace PerfectGym.AutomergeBot.Services.MergingBranches
+namespace PerfectGym.AutomergeBot.Features.MergingBranches
 {
     public interface IMergePerformer
     {

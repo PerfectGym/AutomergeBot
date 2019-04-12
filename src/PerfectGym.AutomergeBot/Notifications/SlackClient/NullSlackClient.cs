@@ -1,6 +1,6 @@
 ﻿using SlackClientStandard;
 
-namespace PerfectGym.AutomergeBot.SlackClient
+namespace PerfectGym.AutomergeBot.Notifications.SlackClient
 {
     internal class NullSlackClient : ISlackClient
     {

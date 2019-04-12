@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace PerfectGym.AutomergeBot.Services.MergingBranches
+namespace PerfectGym.AutomergeBot.Features.MergingBranches
 {
     public class ContainerRegistrations : IContainerRegistrations
     {

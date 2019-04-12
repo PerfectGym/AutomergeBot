@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication;
+using Newtonsoft.Json.Linq;
 
 namespace PerfectGym.AutomergeBot.Models
 {
@@ -25,5 +27,45 @@ namespace PerfectGym.AutomergeBot.Models
 
             return lastJToken.Value<TValue>();
         }
+
+
+        protected static List<TValue> SafeGetList<TValue>(JObject jObject, string path) 
+        {
+            var result = new List<TValue>();
+
+            var props = path.Split('.');
+
+            JObject current = jObject;
+            JToken lastJToken = null;
+
+            var pastPath = "";
+
+            foreach (var prop in props)
+            {
+
+                pastPath += "."+prop;
+
+                if (current != null && current.TryGetValue(prop, out lastJToken))
+                {
+                    if (lastJToken is JArray)
+                    {
+                        var jarray = (JArray)lastJToken;
+                        foreach (var obj in jarray.Children())
+                        {
+                            result.Add(InfoModelBase.SafeGet<TValue>((JObject)obj, path.Substring(pastPath.Length)));
+                        }
+                    }
+
+                    current = lastJToken as JObject;
+                }
+            }
+
+            return result;
+        }
+
+      
+
+
+
     }
 }

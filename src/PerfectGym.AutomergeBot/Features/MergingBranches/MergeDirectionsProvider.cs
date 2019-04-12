@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PerfectGym.AutomergeBot.Services.MergingBranches
+namespace PerfectGym.AutomergeBot.Features.MergingBranches
 {
     public interface IMergeDirections
     {

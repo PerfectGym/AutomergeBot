@@ -7,8 +7,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using PerfectGym.AutomergeBot.Services.MergingBranches;
-using PerfectGym.AutomergeBot.Services.TempBranchesRemoving;
+using PerfectGym.AutomergeBot.Features.AdditionalCodeReview;
+using PerfectGym.AutomergeBot.Features.MergingBranches;
+using PerfectGym.AutomergeBot.Features.TempBranchesRemoving;
 
 namespace PerfectGym.AutomergeBot
 {
@@ -88,6 +89,11 @@ namespace PerfectGym.AutomergeBot
                 HandlePullRequestEvent(context, requestBody);
                 return true;
             }
+            if (eventName == Consts.GitHubPullRequestReviewEventName)
+            {
+                HandlePullRequestReviewEvent(context, requestBody);
+                return true;
+            }
             if (eventName == Consts.GitHubPingEventName)
             {
                 return true;
@@ -129,6 +135,25 @@ namespace PerfectGym.AutomergeBot
                 _logger.LogInformation("Finished processing pull_request notification");
             }
         }
+
+        private void HandlePullRequestReviewEvent(HttpContext context, string payloadJson)
+        {
+            var pullrequestPayload = JsonConvert.DeserializeObject<JObject>(payloadJson);
+            var pullRequestInfoModel = PullRequestReviewInfoModel.CreateFromPayload(pullrequestPayload);
+            
+            var pullRequestHandler = context.RequestServices.GetRequiredService<IPullRequestReviewModelHandler>();
+            
+            _logger.LogInformation("Started processing pull_request_review notification {@payloadModel}", pullRequestInfoModel);
+            try
+            {
+                pullRequestHandler.Handle(pullRequestInfoModel);
+            }
+            finally
+            {
+                _logger.LogInformation("Finished processing pull_request_review notification");
+            }
+        }
+
     }
 
 }

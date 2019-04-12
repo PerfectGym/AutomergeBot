@@ -142,5 +142,15 @@ namespace PerfectGym.AutomergeBot.RepositoryConnection
         {
             return Exec(r => r.GetOpenPullRequests());
         }
+
+        public PullRequest CreateReviewRequest(int pullRequestNumber, string reviewerName)
+        {
+            return Exec(r => r.CreateReviewRequest(pullRequestNumber, reviewerName));
+        }
+
+        public void AddLabelToIssue(int issueNumber, string label)
+        {
+             Exec(r => r.AddLabelToIssue(issueNumber, label));
+        }
     }
 }

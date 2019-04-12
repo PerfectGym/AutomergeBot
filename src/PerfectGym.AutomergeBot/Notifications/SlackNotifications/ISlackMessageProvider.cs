@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PerfectGym.AutomergeBot.SlackNotifications
+namespace PerfectGym.AutomergeBot.Notifications.SlackNotifications
 {
     public interface ISlackMessageProvider
     {

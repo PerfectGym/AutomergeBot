@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using PerfectGym.AutomergeBot.Models;
 
-namespace PerfectGym.AutomergeBot.SlackClient
+namespace PerfectGym.AutomergeBot.Notifications.SlackClient
 {
     public class SlackUserMappingsConfiguration
     {

@@ -9,9 +9,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using PerfectGym.AutomergeBot.Features.MergingBranches;
+using PerfectGym.AutomergeBot.Features.PullRequestsManualMergingGovernor;
+using PerfectGym.AutomergeBot.Notifications.UserNotifications;
 using PerfectGym.AutomergeBot.RepositoryConnection;
-using PerfectGym.AutomergeBot.UserNotifications;
 using Serilog;
+using ContainerRegistrations = PerfectGym.AutomergeBot.Notifications.SlackClient.ContainerRegistrations;
 
 
 namespace PerfectGym.AutomergeBot
@@ -29,7 +32,6 @@ namespace PerfectGym.AutomergeBot
         private IConfiguration BuildConfiguration(IHostingEnvironment hostingEnvironment)
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(hostingEnvironment.ContentRootPath)
                 .AddJsonFile("appsettings.json", false, true)
                 .AddJsonFile("slackUserMappings.json", true, true);
 
@@ -45,17 +47,19 @@ namespace PerfectGym.AutomergeBot
                 .SetMinimumLevel(LogLevel.Trace)
                 .AddSerilog(dispose: true));
             services.Configure<AutomergeBotConfiguration>(_configuration);
-            new SlackClient.ContainerRegistrations(_configuration).DoRegistrations(services);
+            new ContainerRegistrations(_configuration).DoRegistrations(services);
 
 
             services.AddTransient<IRepositoryConnectionProvider, RepositoryConnectionProvider>();
             services.AddTransient<IGitHubEventHttpRequestHandler, GitHubEventHttpRequestHandler>();
-            new SlackNotifications.ContainerRegistrations().DoRegistrations(services);
+            new Notifications.SlackNotifications.ContainerRegistrations().DoRegistrations(services);
             services.AddTransient<IUserNotifier, UserNotifier>();
 
-            new Services.MergingBranches.ContainerRegistrations().DoRegistrations(services);
-            new Services.PullRequestsManualMergingGovernor.ContainerRegistrations().DoRegistrations(services);
-            new Services.TempBranchesRemoving.ContainerRegistrations().DoRegistrations(services);
+            new Features.MergingBranches.ContainerRegistrations().DoRegistrations(services);
+            new Features.PullRequestsManualMergingGovernor.ContainerRegistrations().DoRegistrations(services);
+            new Features.TempBranchesRemoving.ContainerRegistrations().DoRegistrations(services);
+            new Features.AdditionalCodeReview.ContainerRegistrations(_configuration).DoRegistrations(services);
+
         }
 
         public override void Configure(IApplicationBuilder app)
@@ -87,14 +91,14 @@ namespace PerfectGym.AutomergeBot
 
         private static void StartPullRequestsGovernor(IApplicationBuilder app)
         {
-            var pullRequestGovernor = app.ApplicationServices.GetRequiredService<Services.PullRequestsManualMergingGovernor.PullRequestsGovernor>();
+            var pullRequestGovernor = app.ApplicationServices.GetRequiredService<PullRequestsGovernor>();
             pullRequestGovernor.StartWorker();
         }
 
         private static void UpdateMergeDirectionsProviderConfiguration(IServiceProvider serviceProvider)
         {
             var cfg = serviceProvider.GetRequiredService<IOptionsMonitor<AutomergeBotConfiguration>>().CurrentValue;
-            var mergeDirectionsProviderConfigurator = serviceProvider.GetRequiredService<Services.MergingBranches.IMergeDirectionsProviderConfigurator>();
+            var mergeDirectionsProviderConfigurator = serviceProvider.GetRequiredService<IMergeDirectionsProviderConfigurator>();
 
             mergeDirectionsProviderConfigurator.UpdateMergeDirections(cfg.MergeDirectionsParsed);
         }
@@ -139,7 +143,7 @@ namespace PerfectGym.AutomergeBot
         private static void LogConfigurationUsed(IServiceProvider serviceProvider, ILogger<Startup> logger)
         {
             var cfg = serviceProvider.GetRequiredService<IOptionsMonitor<AutomergeBotConfiguration>>().CurrentValue;
-            var mergeDirectionsProvider = serviceProvider.GetRequiredService<Services.MergingBranches.IMergeDirectionsProvider>();
+            var mergeDirectionsProvider = serviceProvider.GetRequiredService<IMergeDirectionsProvider>();
 
 
             logger.LogInformation("Working with repository: {repositoryOwner}/{repositoryName}", cfg.RepositoryOwner, cfg.RepositoryName);

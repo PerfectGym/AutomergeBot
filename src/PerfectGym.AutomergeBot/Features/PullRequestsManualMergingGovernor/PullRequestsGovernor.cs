@@ -5,10 +5,10 @@ using System.Threading;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Octokit;
+using PerfectGym.AutomergeBot.Notifications.UserNotifications;
 using PerfectGym.AutomergeBot.RepositoryConnection;
-using PerfectGym.AutomergeBot.UserNotifications;
 
-namespace PerfectGym.AutomergeBot.Services.PullRequestsManualMergingGovernor
+namespace PerfectGym.AutomergeBot.Features.PullRequestsManualMergingGovernor
 {
     /// <summary>
     /// Used to check if there are any open pull requests that should be closed (i.e. PRs created by AutoMergeBot)

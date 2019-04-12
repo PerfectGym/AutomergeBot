@@ -2,11 +2,11 @@
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using PerfectGym.AutomergeBot.UserNotifications;
+using PerfectGym.AutomergeBot.Notifications.UserNotifications;
 using SlackClientStandard;
 using SlackClientStandard.Entities;
 
-namespace PerfectGym.AutomergeBot.SlackClient
+namespace PerfectGym.AutomergeBot.Notifications.SlackClient
 {
     public interface ISlackClientProvider
     {

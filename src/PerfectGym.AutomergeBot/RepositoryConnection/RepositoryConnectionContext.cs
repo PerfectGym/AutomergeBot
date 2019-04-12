@@ -81,6 +81,40 @@ namespace PerfectGym.AutomergeBot.RepositoryConnection
             return pullRequest;
         }
 
+
+        public PullRequest CreateReviewRequest(int pullRequestNumber,string reviewerName)
+        {
+            var client = CreateGitHubClient();
+
+            var pullRequestReviewRequest = new PullRequestReviewRequest(
+              new List<string>()
+                 {
+                     reviewerName
+                 }
+            );
+
+            var list= client.PullRequest.Review.GetAll(_repositoryOwner, _repositoryName, pullRequestNumber).Result;
+
+            _logger.LogTrace("Creating Review Request {@requestModel}", pullRequestReviewRequest);
+            var result = client.PullRequest.ReviewRequest.Create(_repositoryOwner,_repositoryName,pullRequestNumber, pullRequestReviewRequest).Result;
+            _logger.LogTrace("Created Review Request for pull Request Number {pullRequestNumber} and reviewer {reviewer}", pullRequestNumber, reviewerName);
+
+            return result;
+        }
+
+
+        public void AddLabelToIssue(int issueNumber,string label)
+        {
+            var client = CreateGitHubClient();
+            
+            _logger.LogTrace("Adding label '{label}' to  issue number {issueNumber}", label, issueNumber);
+           client.Issue.Labels.AddToIssue(_repositoryOwner, _repositoryName, issueNumber,new string[]{label});
+            _logger.LogTrace("Added label '{label}' to  issue number {issueNumber}", label, issueNumber);
+            
+        }
+
+
+
         public void CreateBranch(BranchName branchName, string commitSha)
         {
             var newReference = new NewReference(branchName.GitRef, commitSha);

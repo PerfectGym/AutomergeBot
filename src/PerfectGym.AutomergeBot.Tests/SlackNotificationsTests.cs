@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
-using PerfectGym.AutomergeBot.SlackNotifications;
-using PerfectGym.AutomergeBot.UserNotifications;
-using ISlackClientProvider = PerfectGym.AutomergeBot.SlackClient.ISlackClientProvider;
+using PerfectGym.AutomergeBot.Notifications.SlackNotifications;
+using PerfectGym.AutomergeBot.Notifications.UserNotifications;
+using ISlackClientProvider = PerfectGym.AutomergeBot.Notifications.SlackClient.ISlackClientProvider;
 
 namespace PerfectGym.AutomergeBot.Tests
 {

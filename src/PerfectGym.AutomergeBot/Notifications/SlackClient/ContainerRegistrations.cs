@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace PerfectGym.AutomergeBot.SlackClient
+namespace PerfectGym.AutomergeBot.Notifications.SlackClient
 {
     public class ContainerRegistrations : IContainerRegistrations
     {

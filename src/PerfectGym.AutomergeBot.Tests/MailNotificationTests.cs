@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using NUnit.Framework;
+using PerfectGym.AutomergeBot.Notifications.SlackNotifications;
+using PerfectGym.AutomergeBot.Notifications.UserNotifications;
 using PerfectGym.AutomergeBot.RepositoryConnection;
-using PerfectGym.AutomergeBot.SlackNotifications;
-using PerfectGym.AutomergeBot.UserNotifications;
 using SlackClientStandard;
-using ISlackClientProvider = PerfectGym.AutomergeBot.SlackClient.ISlackClientProvider;
+using ISlackClientProvider = PerfectGym.AutomergeBot.Notifications.SlackClient.ISlackClientProvider;
 
 namespace PerfectGym.AutomergeBot.Tests
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace PerfectGym.AutomergeBot.Services.TempBranchesRemoving
+namespace PerfectGym.AutomergeBot.Features.TempBranchesRemoving
 {
     public class ContainerRegistrations : IContainerRegistrations
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PerfectGym.AutomergeBot.SlackNotifications
+namespace PerfectGym.AutomergeBot.Notifications.SlackNotifications
 {
     public interface INow
     {

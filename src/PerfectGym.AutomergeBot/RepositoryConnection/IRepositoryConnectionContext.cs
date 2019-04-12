@@ -17,6 +17,8 @@ namespace PerfectGym.AutomergeBot.RepositoryConnection
 
         bool IsMonitoredRepository(int repositoryId);
         PullRequest CreatePullRequest(BranchName sourceBranch, BranchName destinationBranch, string title, string body);
+        PullRequest CreateReviewRequest(int pullRequestNumber, string reviewerName);
+        void AddLabelToIssue(int issueNumber, string label);
         void CreateBranch(BranchName branchName, string commitSha);
         void RemoveBranch(BranchName branchName);
         void AddReviewerToPullRequest(int pullRequestNumber, string[] userNames);
