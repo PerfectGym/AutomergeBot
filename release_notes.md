@@ -1,10 +1,12 @@
 ## RELEASE NOTES
 
-### VERSION 1.2.4
+### VERSION 1.3.0
 
 **Features**
 - Assign an additional random reviewer to pull request after approval
 
+### VERSION 1.2.4
+- Extracted hardcoded NotifyUserAboutPullRequestWithUnresolvedConflicts message template to text file.
 
 ### VERSION 1.2.3
 
