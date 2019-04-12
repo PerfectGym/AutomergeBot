@@ -81,7 +81,7 @@ namespace PerfectGym.AutomergeBot.Notifications.UserNotifications
 
         private static string GetMessageTemplate(string messageType)
         {
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"UserNotifications\MessageTemplates", messageType + ".txt");
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Notifications\UserNotifications\MessageTemplates", messageType + ".txt");
             return File.ReadAllText(path);
         }
 
