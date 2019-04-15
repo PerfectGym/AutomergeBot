@@ -41,7 +41,10 @@ AutomergeBot's unit of work context is 2 branches: source branch (containing pus
    `sc create PerfectGym.AutomergeBot binPath=[full path]\PerfectGym.AutomergeBot.WindowsService.exe`
 4. Start service   
   `sc start PerfectGym.AutomergeBot`
-5. Service listens GitHub webhook events on a local url: `http://*:7654`
+5. Service listens GitHub webhook events on a local url: `http://*:7654` end selected events:
+   - Pull requests
+   - Pushes
+   - Pull request reviews (For feature 'Assign an additional random reviewer')
 
 ## Problems it resolves
 
