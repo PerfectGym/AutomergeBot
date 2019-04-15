@@ -14,7 +14,7 @@
         "CheckFrequency": null, //determines how often PRs are checked, eg. "00:15:00"
         "SlackToken": null // to get it: create new Slack application, give it permissions needed by SlackClientStandard (currently: users:read, chat:write:bot) than deploy to the workspace
     },
-	"AdditionalCodeReviewConfiguration":{
+	"AdditionalCodeReviewConfiguration":{ // This feature requires selected the webhook event: Pull request reviews (Repository->Settings->Webhooks->[+] Pull request reviews)
 		"AdditionalReviewProbability":"0", //0-100 
 		"Reviewers": [],// eg. ["pawelmieten","owerkop"]
 		"NeedAdditionalReviewLabel":"AdditionalReview", //Label name for PR where is need additional review
