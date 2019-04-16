@@ -61,12 +61,10 @@ namespace PerfectGym.AutomergeBot.Features.AdditionalCodeReview
                     if (reviewer != null)
                     {
                         CreateReviewRequestAndAddLabel(repoContext, prReviewModel, reviewer);
+                    }else
+                    {
+                         AddNoNeedAdditionalReviewLabel(repoContext, prReviewModel);
                     }
-                }
-
-                if (reviewer == null)
-                {
-                    AddNoNeedAdditionalReviewLabel(repoContext, prReviewModel);
                 }
             }
         }
