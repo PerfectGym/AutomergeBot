@@ -98,6 +98,14 @@ namespace PerfectGym.AutomergeBot
             {
                 return true;
             }
+            if (eventName == Consts.GitHubCheckRunEventName)
+            {
+                HandleCheckRunEven(context, requestBody);
+                return true;
+            }
+
+            
+
 
             return false;
         }
@@ -153,6 +161,27 @@ namespace PerfectGym.AutomergeBot
                 _logger.LogInformation("Finished processing pull_request_review notification");
             }
         }
+
+        private void HandleCheckRunEven(HttpContext context, string payloadJson)
+        {
+            var pullrequestPayload = JsonConvert.DeserializeObject<JObject>(payloadJson);
+            var pullRequestInfoModel = CheckRunInfoModel.CreateFromPayload(pullrequestPayload);
+
+            var checkRunHandler = context.RequestServices.GetRequiredService<ICheckRunModelHandler>();
+
+            _logger.LogInformation("Started processing check_run notification {@payloadModel}", pullRequestInfoModel);
+            try
+            {
+                checkRunHandler.Handle(pullRequestInfoModel);
+            }
+            finally
+            {
+                _logger.LogInformation("Finished processing check_run notification");
+            }
+        }
+
+        
+
 
     }
 

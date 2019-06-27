@@ -184,6 +184,19 @@ namespace PerfectGym.AutomergeBot.RepositoryConnection
             return openPullRequests;
         }
 
+        public PullRequest GetPullRequest(int pullRequestNumber)
+        {
+            var client = CreateGitHubClient();
+            var request = new PullRequestRequest
+            {
+                State = ItemStateFilter.Open,
+            };
+            var result = client.PullRequest.Get(_repositoryOwner,_repositoryName, pullRequestNumber)
+                .Result;
+            return result;
+        }
+
+
         /// <summary>
         /// Removes "refs/" prefix from git ref string.
         /// Probably there is bug in a Octokit's Delete method.

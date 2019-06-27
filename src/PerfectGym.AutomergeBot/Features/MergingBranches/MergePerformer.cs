@@ -96,6 +96,8 @@ namespace PerfectGym.AutomergeBot.Features.MergingBranches
             }
         }
 
+
+
         private static string CreateCoAuthoredByMessageForExistingPullRequest(PullRequest pullRequest)
         {
             var stringBuilder = new StringBuilder();

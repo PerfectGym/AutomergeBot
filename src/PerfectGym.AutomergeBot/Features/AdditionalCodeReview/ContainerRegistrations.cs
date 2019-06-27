@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PerfectGym.AutomergeBot.Features.MergingBranches;
 using PerfectGym.AutomergeBot.Notifications.SlackClient;
 
 namespace PerfectGym.AutomergeBot.Features.AdditionalCodeReview
@@ -19,6 +20,7 @@ namespace PerfectGym.AutomergeBot.Features.AdditionalCodeReview
         public void DoRegistrations(IServiceCollection services)
         {
             services.AddTransient<IPullRequestReviewModelHandler, PullRequestReviewModelHandler>();
+            services.AddTransient<ICheckRunModelHandler, CheckRunModelHandler>();
 
             services.Configure<AdditionalCodeReviewConfiguration>(_configuration);
         }

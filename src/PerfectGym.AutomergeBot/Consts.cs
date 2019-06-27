@@ -6,11 +6,14 @@
         public const string GitHubPingEventName = "ping";
         public const string GitHubPullRequestEventName = "pull_request";
         public const string GitHubPullRequestReviewEventName = "pull_request_review";
+        public const string GitHubCheckRunEventName = "check_run";
         public const string GitHubEventRequestHeaderName = "X-GitHub-Event";
         public const string GitHubSignatureRequestHeaderName = "X-Hub-Signature";
         public const string GitHubDeliveryRequestHeaderName = "X-GitHub-Delivery";
         public const string RefsHeads = "refs/heads/";
         public const string AutomergeBotPullRequestTitlePrefix = "Automerge";
         public const string SuccessfulMergeComment = "Your changes have been successfully merged";
+        
+        
     }
 }
