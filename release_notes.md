@@ -1,5 +1,11 @@
 ## RELEASE NOTES
 
+### VERSION 1.3.1
+
+**Features**
+- Auto merge PullRequest by AutopMargeBot after fix conflicts and finish check with success
+
+
 ### VERSION 1.3.0
 
 **Features**

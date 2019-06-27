@@ -131,7 +131,7 @@ namespace PerfectGym.AutomergeBot.Features.MergingBranches
             PushInfoModel pushInfo,
             string changesOriginalAuthor)
         {
-            var title = $"{Consts.AutomergeBotPullRequestTitlePrefix} {pushInfo.GetPushedBranchName()} @{pushInfo.GetHeadCommitShaShort()} -> {destinationBranchName}";
+            var title = $"{_cfg.CreatedBranchesPrefix} {pushInfo.GetPushedBranchName()} @{pushInfo.GetHeadCommitShaShort()} -> {destinationBranchName}";
             var body = $"Last change author: {changesOriginalAuthor}";
 
             try

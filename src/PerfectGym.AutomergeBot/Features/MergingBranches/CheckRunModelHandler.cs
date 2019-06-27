@@ -18,20 +18,24 @@ namespace PerfectGym.AutomergeBot.Features.MergingBranches
     {
         private readonly IRepositoryConnectionProvider _repositoryConnectionProvider;
         private readonly IMergePerformer _mergePerformer;
+        private readonly IOptionsMonitor<AutomergeBotConfiguration> _cfg;
 
 
         public CheckRunModelHandler(
             IRepositoryConnectionProvider repositoryConnectionProvider,
-            IMergePerformer mergePerformer
+            IMergePerformer mergePerformer,
+            IOptionsMonitor<AutomergeBotConfiguration> cfg
             )
         {
             _repositoryConnectionProvider = repositoryConnectionProvider;
             _mergePerformer = mergePerformer;
+            _cfg = cfg;
         }
 
         public void Handle(CheckRunInfoModel model)
         {
             if (
+                IsAutomergeBotPullRequest(model) &&
                 model.Status == CheckRunInfoModel.StatusValues.Completed &&
                 model.Conclusion == CheckRunInfoModel.ConclusionValues.Success
             )
@@ -45,6 +49,15 @@ namespace PerfectGym.AutomergeBot.Features.MergingBranches
                 }
             }
         }
-    
+
+
+
+        private bool IsAutomergeBotPullRequest(CheckRunInfoModel prReviewModel)
+        {
+            return prReviewModel.BranchName.StartsWith(_cfg.CurrentValue.CreatedBranchesPrefix);
+        }
+
+
+
     }
 }

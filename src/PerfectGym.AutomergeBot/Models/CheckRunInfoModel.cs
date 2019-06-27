@@ -15,13 +15,15 @@ namespace PerfectGym.AutomergeBot.Models
         public int PullRequestNumber { get; }
         public string Status { get; }
         public string Conclusion { get; }
+        public string BranchName { get; set; }
 
-        public CheckRunInfoModel(string name, int pullRequestNumber, string status, string conclusion)
+        public CheckRunInfoModel(string name, int pullRequestNumber, string status, string conclusion, string branchName)
         {
             Name = name;
             PullRequestNumber = pullRequestNumber;
             Status = status;
             Conclusion = conclusion;
+            BranchName = branchName;
         }
 
         public static CheckRunInfoModel CreateFromPayload(JObject pushPayload)
@@ -30,7 +32,8 @@ namespace PerfectGym.AutomergeBot.Models
                 SafeGet<string>(pushPayload, "check_run.state"),
                 SafeGet<int>(pushPayload, "pull_request.number"),
                 SafeGet<string>(pushPayload, "check_run.status"),
-                SafeGet<string>(pushPayload, "check_run.user.conclusion")
+                SafeGet<string>(pushPayload, "check_run.user.conclusion"),
+                SafeGet<string>(pushPayload, "pull_request.head.ref")
             );
         }
         
