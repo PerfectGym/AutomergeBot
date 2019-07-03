@@ -98,13 +98,7 @@ namespace PerfectGym.AutomergeBot
             {
                 return true;
             }
-            if (eventName == Consts.GitHubCheckRunEventName)
-            {
-                HandleCheckRunEven(context, requestBody);
-                return true;
-            }
-
-            
+      
 
 
             return false;
@@ -149,8 +143,9 @@ namespace PerfectGym.AutomergeBot
             var pullrequestPayload = JsonConvert.DeserializeObject<JObject>(payloadJson);
             var pullRequestInfoModel = PullRequestReviewInfoModel.CreateFromPayload(pullrequestPayload);
             
-            var pullRequestHandler = context.RequestServices.GetRequiredService<IPullRequestReviewModelHandler>();
-            
+            var pullRequestHandler = context.RequestServices.GetRequiredService<Features.AdditionalCodeReview.IPullRequestReviewModelHandler>();
+            var pullRequestHandler2 = context.RequestServices.GetRequiredService<Features.MergingBranches.IPullRequestReviewModelHandler>();
+
             _logger.LogInformation("Started processing pull_request_review notification {@payloadModel}", pullRequestInfoModel);
             try
             {
@@ -160,25 +155,20 @@ namespace PerfectGym.AutomergeBot
             {
                 _logger.LogInformation("Finished processing pull_request_review notification");
             }
-        }
 
-        private void HandleCheckRunEven(HttpContext context, string payloadJson)
-        {
-            var pullrequestPayload = JsonConvert.DeserializeObject<JObject>(payloadJson);
-            var pullRequestInfoModel = CheckRunInfoModel.CreateFromPayload(pullrequestPayload);
-
-            var checkRunHandler = context.RequestServices.GetRequiredService<ICheckRunModelHandler>();
-
-            _logger.LogInformation("Started processing check_run notification {@payloadModel}", pullRequestInfoModel);
             try
             {
-                checkRunHandler.Handle(pullRequestInfoModel);
+                pullRequestHandler2.Handle(pullRequestInfoModel);
             }
             finally
             {
-                _logger.LogInformation("Finished processing check_run notification");
+                _logger.LogInformation("Finished processing pull_request_review notification");
             }
+
+
+
         }
+
 
         
 

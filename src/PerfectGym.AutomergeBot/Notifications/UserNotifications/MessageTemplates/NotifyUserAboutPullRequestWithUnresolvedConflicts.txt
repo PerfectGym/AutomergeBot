@@ -18,10 +18,12 @@ Github does not update it and lies that conflicts are present.
    ```
 3. Wait until TeamCity (CI) mark pull request as OK. It should take no more than 20minutes after pushing last change.
 4. Approve [pull request]({{pullRequestUrl}}/files#submit-review) review
-5. Merge [pull request]({{pullRequestUrl}}). 
+After approved AutoMergeBoot should automatically merge the pull request.
+If not:
+Merge manualy [pull request]({{pullRequestUrl}}). 
    **Important** - remember to do (*Merge commit*) 
    ~~Squash and merge~~ cannot be used for merging changes across release branches.
-6. Remove temporary branch from Your computer
+5. Remove temporary branch from Your computer
    ```
    git checkout - && git branch -D {{pullRequestBranchName}}
    ```

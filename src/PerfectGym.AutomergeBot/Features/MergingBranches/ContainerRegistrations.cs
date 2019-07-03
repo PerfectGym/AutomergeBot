@@ -10,10 +10,15 @@ namespace PerfectGym.AutomergeBot.Features.MergingBranches
             services.AddTransient<IProcessPushPredicate, ProcessPushPredicate>();
             services.AddTransient<IMergePerformer, MergePerformer>();
             services.AddTransient<IPullRequestMergeRetryier, PullRequestMergeRetryier>();
+            services.AddTransient<IPullRequestReviewModelHandler, PullRequestReviewModelHandler>();
 
             var mergeDirectionsProviderInstance = new MergeDirectionsProvider();
             services.AddSingleton<IMergeDirectionsProviderConfigurator>(mergeDirectionsProviderInstance);
             services.AddSingleton<IMergeDirectionsProvider>(mergeDirectionsProviderInstance);
+
+
+            
+
         }
     }
 }

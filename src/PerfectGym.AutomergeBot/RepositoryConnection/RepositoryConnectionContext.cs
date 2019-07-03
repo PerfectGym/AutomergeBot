@@ -178,6 +178,7 @@ namespace PerfectGym.AutomergeBot.RepositoryConnection
             var request = new PullRequestRequest
             {
                 State = ItemStateFilter.Open,
+                
             };
             var openPullRequests = client.PullRequest.GetAllForRepository(_repositoryOwner, _repositoryName, request)
                 .Result;
