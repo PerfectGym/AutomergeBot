@@ -3,7 +3,7 @@
 ### VERSION 1.3.1
 
 **Features**
-- Auto merge PullRequest by AutopMargeBot after fix conflicts and finish check with success
+- Auto merge PullRequest by AutopMargeBot after fix conflicts and approved PullRequest
 
 
 ### VERSION 1.3.0
