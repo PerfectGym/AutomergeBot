@@ -187,6 +187,8 @@ namespace PerfectGym.AutomergeBot.RepositoryConnection
 
         public PullRequest GetPullRequest(int pullRequestNumber)
         {
+            _logger.LogDebug("Getting pull request {pullRequestNumber}", pullRequestNumber);
+
             var client = CreateGitHubClient();
             var request = new PullRequestRequest
             {
