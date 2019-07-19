@@ -50,15 +50,21 @@ namespace PerfectGym.AutomergeBot.Features.MergingBranches
                     using (var repoContext = _repositoryConnectionProvider.GetRepositoryConnection())
                     {
                         var pullRequest = repoContext.GetPullRequest(prReviewModel.PullRequestNumber);
+                        if (pullRequest.Mergeable == null)
+                        {
+                            _logger.LogInformation("Pull request {pullRequestNumber} has Mergeable == null. Checking once again. ", prReviewModel.PullRequestNumber);
+                            System.Threading.Thread.Sleep(TimeSpan.FromSeconds(10));
+                            pullRequest = repoContext.GetPullRequest(prReviewModel.PullRequestNumber);
+                        }
 
                         if (pullRequest.Mergeable??false)
                         {
-                            _logger.LogInformation("Try merge after appreved pull request - {pullRequestNumber}", prReviewModel.PullRequestNumber);
+                            _logger.LogInformation("Pull request {pullRequestNumber} has been approved. Trying merge it", prReviewModel.PullRequestNumber);
                             _mergePerformer.TryMergeExistingPullRequest(pullRequest, repoContext);
                         }
                         else
                         {
-                            _logger.LogInformation("Pull request is not mergeable - {pullRequestNumber}", prReviewModel.PullRequestNumber);
+                            _logger.LogInformation("Pull request {pullRequestNumber} is not mergeable. pullRequest.Mergeable={mergeable}", prReviewModel.PullRequestNumber, pullRequest.Mergeable==null?"null":"false");
                         }
                     }
 

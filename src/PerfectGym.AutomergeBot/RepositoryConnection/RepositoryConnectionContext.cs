@@ -175,6 +175,7 @@ namespace PerfectGym.AutomergeBot.RepositoryConnection
         public IReadOnlyList<PullRequest> GetOpenPullRequests()
         {
             var client = CreateGitHubClient();
+            _logger.LogDebug("Getting open pull requests");
             var request = new PullRequestRequest
             {
                 State = ItemStateFilter.Open,
