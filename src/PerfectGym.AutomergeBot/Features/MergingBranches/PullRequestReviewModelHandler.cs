@@ -12,11 +12,7 @@ using PerfectGym.AutomergeBot.RepositoryConnection;
 
 namespace PerfectGym.AutomergeBot.Features.MergingBranches
 {
-    public interface IPullRequestReviewModelHandler
-    {
-        void Handle(PullRequestReviewInfoModel pullRequestReviewInfoModel);
-    }
-
+ 
     public class PullRequestReviewModelHandler : IPullRequestReviewModelHandler
     {
         private readonly IRepositoryConnectionProvider _repositoryConnectionProvider;
@@ -43,32 +39,31 @@ namespace PerfectGym.AutomergeBot.Features.MergingBranches
             
             var prReviewModel = pullRequestReviewInfoModel;
 
-                if (prReviewModel.State == PullRequestReviewInfoModel.States.Approved
-                    && IsAutomergeBotPullRequest(prReviewModel))
+            if (prReviewModel.State == PullRequestReviewInfoModel.States.Approved
+                && IsAutomergeBotPullRequest(prReviewModel))
+            {
+
+                using (var repoContext = _repositoryConnectionProvider.GetRepositoryConnection())
                 {
-
-                    using (var repoContext = _repositoryConnectionProvider.GetRepositoryConnection())
+                    var pullRequest = repoContext.GetPullRequest(prReviewModel.PullRequestNumber);
+                    if (pullRequest.Mergeable == null)
                     {
-                        var pullRequest = repoContext.GetPullRequest(prReviewModel.PullRequestNumber);
-                        if (pullRequest.Mergeable == null)
-                        {
-                            _logger.LogInformation("Pull request {pullRequestNumber} has Mergeable == null. Checking once again. ", prReviewModel.PullRequestNumber);
-                            System.Threading.Thread.Sleep(TimeSpan.FromSeconds(10));
-                            pullRequest = repoContext.GetPullRequest(prReviewModel.PullRequestNumber);
-                        }
-
-                        if (pullRequest.Mergeable??false)
-                        {
-                            _logger.LogInformation("Pull request {pullRequestNumber} has been approved. Trying merge it", prReviewModel.PullRequestNumber);
-                            _mergePerformer.TryMergeExistingPullRequest(pullRequest, repoContext);
-                        }
-                        else
-                        {
-                            _logger.LogInformation("Pull request {pullRequestNumber} is not mergeable. pullRequest.Mergeable={mergeable}", prReviewModel.PullRequestNumber, pullRequest.Mergeable==null?"null":"false");
-                        }
+                        _logger.LogInformation("Pull request {pullRequestNumber} has Mergeable == null. Checking once again. ", prReviewModel.PullRequestNumber);
+                        System.Threading.Thread.Sleep(TimeSpan.FromSeconds(10));
+                        pullRequest = repoContext.GetPullRequest(prReviewModel.PullRequestNumber);
                     }
 
+                    if (pullRequest.Mergeable??false)
+                    {
+                        _logger.LogInformation("Pull request {pullRequestNumber} has been approved. Trying merge it", prReviewModel.PullRequestNumber);
+                        _mergePerformer.TryMergeExistingPullRequest(pullRequest, repoContext);
+                    }
+                    else
+                    {
+                        _logger.LogInformation("Pull request {pullRequestNumber} is not mergeable. pullRequest.Mergeable={mergeable}", prReviewModel.PullRequestNumber, pullRequest.Mergeable==null?"null":"false");
+                    }
                 }
+            }
             
         }
 

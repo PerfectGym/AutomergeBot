@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using PerfectGym.AutomergeBot.Models;
 using Microsoft.AspNetCore.Http;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using PerfectGym.AutomergeBot.Features;
 using PerfectGym.AutomergeBot.Features.AdditionalCodeReview;
 using PerfectGym.AutomergeBot.Features.MergingBranches;
 using PerfectGym.AutomergeBot.Features.TempBranchesRemoving;
@@ -142,37 +144,24 @@ namespace PerfectGym.AutomergeBot
         {
             var pullrequestPayload = JsonConvert.DeserializeObject<JObject>(payloadJson);
             var pullRequestInfoModel = PullRequestReviewInfoModel.CreateFromPayload(pullrequestPayload);
+            var pullRequestHandlers = context.RequestServices.GetServices<IPullRequestReviewModelHandler>();
             
-            var pullRequestHandler = context.RequestServices.GetRequiredService<Features.AdditionalCodeReview.IPullRequestReviewModelHandler>();
-            var pullRequestHandler2 = context.RequestServices.GetRequiredService<Features.MergingBranches.IPullRequestReviewModelHandler>();
-
-            _logger.LogInformation("Started processing pull_request_review notification {@payloadModel}", pullRequestInfoModel);
-            try
+            foreach (var handler in pullRequestHandlers)
             {
-                pullRequestHandler.Handle(pullRequestInfoModel);
+                try
+                {
+                    _logger.LogInformation("Started processing pull_request_review notification {@payloadModel} by {@handler}", pullRequestInfoModel, handler.GetType().FullName);
+                    handler.Handle(pullRequestInfoModel);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e,"Handler {@handler} throw exception", handler.GetType().FullName);
+                }
+                finally
+                {
+                    _logger.LogInformation("Finished processing pull_request_review notification  by {@handler}", handler.GetType().FullName);
+                }
             }
-            finally
-            {
-                _logger.LogInformation("Finished processing pull_request_review notification");
-            }
-
-            try
-            {
-                pullRequestHandler2.Handle(pullRequestInfoModel);
-            }
-            finally
-            {
-                _logger.LogInformation("Finished processing pull_request_review notification");
-            }
-
-
-
         }
-
-
-        
-
-
     }
-
 }

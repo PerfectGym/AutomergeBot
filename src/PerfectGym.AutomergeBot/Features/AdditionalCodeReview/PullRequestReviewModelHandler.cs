@@ -12,10 +12,7 @@ using PerfectGym.AutomergeBot.RepositoryConnection;
 
 namespace PerfectGym.AutomergeBot.Features.AdditionalCodeReview
 {
-    public interface IPullRequestReviewModelHandler
-    {
-        void Handle(PullRequestReviewInfoModel pullRequestReviewInfoModel);
-    }
+  
 
     public class PullRequestReviewModelHandler : IPullRequestReviewModelHandler
     {
