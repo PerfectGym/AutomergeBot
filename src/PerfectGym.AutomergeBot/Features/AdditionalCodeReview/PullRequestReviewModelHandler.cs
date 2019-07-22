@@ -17,7 +17,7 @@ namespace PerfectGym.AutomergeBot.Features.AdditionalCodeReview
     public class PullRequestReviewModelHandler : IPullRequestReviewModelHandler
     {
         private readonly IRepositoryConnectionProvider _repositoryConnectionProvider;
-        private readonly ILogger<TempBranchesRemoverPullRequestHandlerPullRequestHandler> _logger;
+        private readonly ILogger<PullRequestReviewModelHandler> _logger;
         private readonly AutomergeBotConfiguration _cfg;
 
 
