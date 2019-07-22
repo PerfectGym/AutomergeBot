@@ -23,7 +23,7 @@ namespace PerfectGym.AutomergeBot.Features.AdditionalCodeReview
 
         public PullRequestReviewModelHandler(
             IRepositoryConnectionProvider repositoryConnectionProvider,
-            ILogger<TempBranchesRemoverPullRequestHandlerPullRequestHandler> logger,
+            ILogger<PullRequestReviewModelHandler> logger,
             IOptionsMonitor<AutomergeBotConfiguration> cfg
             )
         {
