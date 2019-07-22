@@ -12,32 +12,29 @@ using PerfectGym.AutomergeBot.RepositoryConnection;
 
 namespace PerfectGym.AutomergeBot.Features.AdditionalCodeReview
 {
-    public interface IPullRequestReviewModelHandler
-    {
-        void Handle(PullRequestReviewInfoModel pullRequestReviewInfoModel);
-    }
+  
 
     public class PullRequestReviewModelHandler : IPullRequestReviewModelHandler
     {
         private readonly IRepositoryConnectionProvider _repositoryConnectionProvider;
         private readonly ILogger<PullRequestReviewModelHandler> _logger;
-        private readonly IOptionsMonitor<AutomergeBotConfiguration> _cfg;
+        private readonly AutomergeBotConfiguration _cfg;
 
 
         public PullRequestReviewModelHandler(
             IRepositoryConnectionProvider repositoryConnectionProvider,
-            ILogger<TempBranchesRemoverPullRequestHandlerPullRequestHandler> logger,
+            ILogger<PullRequestReviewModelHandler> logger,
             IOptionsMonitor<AutomergeBotConfiguration> cfg
             )
         {
             _repositoryConnectionProvider = repositoryConnectionProvider;
             _logger = logger;
-            _cfg = cfg;
+            _cfg = cfg.CurrentValue;
         }
 
         public void Handle(PullRequestReviewInfoModel pullRequestReviewInfoModel)
         {
-            if (_cfg.CurrentValue.AdditionalCodeReviewConfiguration == null)
+            if (_cfg.AdditionalCodeReviewConfiguration == null)
             {
                 return;
             }
@@ -72,7 +69,7 @@ namespace PerfectGym.AutomergeBot.Features.AdditionalCodeReview
         private bool IsAnyAdditionalReviewLabel(PullRequestReviewInfoModel pullRequestReviewInfoModel)
         {
             var labels = pullRequestReviewInfoModel.Labels;
-            var config = _cfg.CurrentValue.AdditionalCodeReviewConfiguration;
+            var config = _cfg.AdditionalCodeReviewConfiguration;
 
             return labels.Contains(config.NeedAdditionalReviewLabel)
                    || labels.Contains(config.NoNeedAdditionalReviewLabel);
@@ -80,7 +77,7 @@ namespace PerfectGym.AutomergeBot.Features.AdditionalCodeReview
 
         private void CreateReviewRequestAndAddLabel(IRepositoryConnectionContext repoContext, PullRequestReviewInfoModel pullRequestReviewInfoModel, string reviewer)
         {
-            var conf = _cfg.CurrentValue.AdditionalCodeReviewConfiguration;
+            var conf = _cfg.AdditionalCodeReviewConfiguration;
             var prReviewModel = pullRequestReviewInfoModel;
 
             _logger.LogDebug("Creating new code review for {pullRequestNumber} by {reviewer} and set label '{label}' ",
@@ -105,24 +102,24 @@ namespace PerfectGym.AutomergeBot.Features.AdditionalCodeReview
             try
             {
                 repoContext.AddLabelToIssue(pullRequestReviewInfoModel.PullRequestNumber,
-                    _cfg.CurrentValue.AdditionalCodeReviewConfiguration.NoNeedAdditionalReviewLabel);
+                    _cfg.AdditionalCodeReviewConfiguration.NoNeedAdditionalReviewLabel);
             }
             catch (Exception e)
             {
                 _logger.LogWarning(e, "Error when adding label '{label}' to issue {issueNumber} ",
-                    _cfg.CurrentValue.AdditionalCodeReviewConfiguration.NoNeedAdditionalReviewLabel,
+                    _cfg.AdditionalCodeReviewConfiguration.NoNeedAdditionalReviewLabel,
                     pullRequestReviewInfoModel.PullRequestNumber);
             }
         }
 
         private bool IsAutomergeBotPullRequest(PullRequestReviewInfoModel prReviewModel)
         {
-            return prReviewModel.BranchName.StartsWith(_cfg.CurrentValue.CreatedBranchesPrefix);
+            return prReviewModel.BranchName.StartsWith(_cfg.CreatedBranchesPrefix);
         }
 
         private string GetRandomReviewerOrNull(string excludeUserLogin)
         {
-            var reviewers = _cfg.CurrentValue.AdditionalCodeReviewConfiguration.Reviewers ?? new List<string>();
+            var reviewers = _cfg.AdditionalCodeReviewConfiguration.Reviewers ?? new List<string>();
 
             reviewers = reviewers.Select(t => t.ToLower()).ToList();
             reviewers.Remove(excludeUserLogin.ToLower());
@@ -136,7 +133,7 @@ namespace PerfectGym.AutomergeBot.Features.AdditionalCodeReview
             Random random = new Random();
             var number = random.Next(1, 100);
 
-            if (number <= _cfg.CurrentValue.AdditionalCodeReviewConfiguration.AdditionalReviewProbability)
+            if (number <= _cfg.AdditionalCodeReviewConfiguration.AdditionalReviewProbability)
             {
                 var index = random.Next(0, reviewers.Count - 1);
                 result = reviewers[index];

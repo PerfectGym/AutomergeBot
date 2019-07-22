@@ -175,14 +175,31 @@ namespace PerfectGym.AutomergeBot.RepositoryConnection
         public IReadOnlyList<PullRequest> GetOpenPullRequests()
         {
             var client = CreateGitHubClient();
+            _logger.LogDebug("Getting open pull requests");
             var request = new PullRequestRequest
             {
                 State = ItemStateFilter.Open,
+                
             };
             var openPullRequests = client.PullRequest.GetAllForRepository(_repositoryOwner, _repositoryName, request)
                 .Result;
             return openPullRequests;
         }
+
+        public PullRequest GetPullRequest(int pullRequestNumber)
+        {
+            _logger.LogDebug("Getting pull request {pullRequestNumber}", pullRequestNumber);
+
+            var client = CreateGitHubClient();
+            var request = new PullRequestRequest
+            {
+                State = ItemStateFilter.Open,
+            };
+            var result = client.PullRequest.Get(_repositoryOwner,_repositoryName, pullRequestNumber)
+                .Result;
+            return result;
+        }
+
 
         /// <summary>
         /// Removes "refs/" prefix from git ref string.

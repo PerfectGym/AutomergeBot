@@ -28,5 +28,6 @@ namespace PerfectGym.AutomergeBot.RepositoryConnection
         IReadOnlyList<Branch> GetAllBranches();
         IEnumerable<GitReference> GetCommitParents(string pushInfoHeadCommitSha);
         IReadOnlyList<PullRequest> GetOpenPullRequests();
+        PullRequest GetPullRequest(int pullRequestNumber);
     }
 }

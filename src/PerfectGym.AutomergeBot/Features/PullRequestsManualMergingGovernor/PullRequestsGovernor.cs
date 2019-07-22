@@ -83,7 +83,7 @@ namespace PerfectGym.AutomergeBot.Features.PullRequestsManualMergingGovernor
             var timeLimit = DateTimeOffset.Now.Add(-_cfg.CurrentValue.PullRequestGovernorConfiguration.ParsedPullRequestTimeLimit);
 
             var pullRequests = openPullRequests
-                .Where(pr => pr.Title.StartsWith(Consts.AutomergeBotPullRequestTitlePrefix) &&
+                .Where(pr => pr.Title.StartsWith(_cfg.CurrentValue.CreatedBranchesPrefix) &&
                              pr.CreatedAt < timeLimit &&
                              pr.User.Login == _cfg.CurrentValue.AutomergeBotGitHubUserName);
 

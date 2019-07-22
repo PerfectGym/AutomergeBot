@@ -96,6 +96,8 @@ namespace PerfectGym.AutomergeBot.Features.MergingBranches
             }
         }
 
+
+
         private static string CreateCoAuthoredByMessageForExistingPullRequest(PullRequest pullRequest)
         {
             var stringBuilder = new StringBuilder();
@@ -129,7 +131,7 @@ namespace PerfectGym.AutomergeBot.Features.MergingBranches
             PushInfoModel pushInfo,
             string changesOriginalAuthor)
         {
-            var title = $"{Consts.AutomergeBotPullRequestTitlePrefix} {pushInfo.GetPushedBranchName()} @{pushInfo.GetHeadCommitShaShort()} -> {destinationBranchName}";
+            var title = $"{_cfg.CreatedBranchesPrefix} {pushInfo.GetPushedBranchName()} @{pushInfo.GetHeadCommitShaShort()} -> {destinationBranchName}";
             var body = $"Last change author: {changesOriginalAuthor}";
 
             try

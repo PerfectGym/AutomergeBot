@@ -6,7 +6,7 @@ It is simple service which automates merging changes between branches using pull
 Applicable only to GitHub.
 
 ## How it works?
-- AutomergeBot is attached to GitHub as a [webhook](https://developer.github.com/webhooks/) for `push` and `pull_requests` events.
+- AutomergeBot is attached to GitHub as a [webhook](https://developer.github.com/webhooks/) for `push`, `pull_requests` events.
 - AutomergeBot uses GitHub account (you must create such account) to interact with [GitHub API](https://developer.github.com/v3/) (creating pull requests etc.)
 - Merging directions are configurable
 - Reacts to webhook events. Does not work for changes pushed when not running.
