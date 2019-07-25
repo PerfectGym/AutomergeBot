@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using PerfectGym.AutomergeBot.Features.CodeReviewInspector;
 using PerfectGym.AutomergeBot.Features.MergingBranches;
 using PerfectGym.AutomergeBot.Features.PullRequestsManualMergingGovernor;
 using PerfectGym.AutomergeBot.Notifications.UserNotifications;
@@ -59,6 +60,7 @@ namespace PerfectGym.AutomergeBot
             new Features.PullRequestsManualMergingGovernor.ContainerRegistrations().DoRegistrations(services);
             new Features.TempBranchesRemoving.ContainerRegistrations().DoRegistrations(services);
             new Features.AdditionalCodeReview.ContainerRegistrations(_configuration).DoRegistrations(services);
+            new Features.CodeReviewInspector.ContainerRegistrations(_configuration).DoRegistrations(services);
 
         }
 
@@ -80,8 +82,15 @@ namespace PerfectGym.AutomergeBot
             LogConfigurationUsed(app.ApplicationServices, logger);
 
             StartPullRequestsGovernor(app);
+            StartStartCodeReviewInspector(app);
             app.Run(HandleRequest);
             logger.LogInformation("Started");
+        }
+
+        private void StartStartCodeReviewInspector(IApplicationBuilder app)
+        {
+            var codeReviewInspector = app.ApplicationServices.GetRequiredService<CodeReviewInspector>();
+            codeReviewInspector.StartWorker();
         }
 
         private void InitiallyLoadMergeDirectionsFromConfig(IApplicationBuilder app)

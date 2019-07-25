@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using PerfectGym.AutomergeBot.Features.AdditionalCodeReview;
+using PerfectGym.AutomergeBot.Features.CodeReviewInspector;
 using PerfectGym.AutomergeBot.Models;
 
 namespace PerfectGym.AutomergeBot
@@ -18,6 +19,7 @@ namespace PerfectGym.AutomergeBot
         public string AutomergeBotGitHubUserName { get; set; }
         public PullRequestGovernorConfiguration PullRequestGovernorConfiguration { get; set; }
         public AdditionalCodeReviewConfiguration AdditionalCodeReviewConfiguration { get; set; }
+        public CodeReviewInspectorConfiguration CodeReviewInspectorConfiguration { get; set; }
 
 
         public (string from, string to)[] MergeDirectionsParsed => ParseMergeDirections();
