@@ -1,12 +1,188 @@
 {
-    "UserMappings": [
-        {
-            "GitHubUserName": "test",
-            "SlackUserEmail": "test@domain.com"
-        },
-        {
-            "GitHubUserName": "jj2",
-            "SlackUserEmail": "jon@domain.com"
-        }
-    ]
+	"UserMappings": [
+		{
+			"SlackUserEmail": "a.malewski@perfectgym.com",
+			"GitHubUserName": "admal"
+		},
+		{
+			"SlackUserEmail": "a.dziugiel@perfectgym.com",
+			"GitHubUserName": "albi3dz"
+		},
+		{
+			"SlackUserEmail": "a.stefanski@perfectgym.com",
+			"GitHubUserName": "alexstefanski"
+		},
+    {
+      "SlackUserEmail": "a.lugowski@perfectgym.com",
+      "GitHubUserName": "arturlugowski"
+    },
+		{
+			"SlackUserEmail": "b.horbowicz@perfectgym.com",
+			"GitHubUserName": "bhorbowicz"
+		},
+		{
+			"SlackUserEmail": "s.wanot@perfectgym.com",
+			"GitHubUserName": "Harunx9"
+		},
+		{
+			"SlackUserEmail": "h.dolacki@perfectgym.com",
+			"GitHubUserName": "HDolacki"
+		},
+		{
+			"SlackUserEmail": "j.szlendak@creadhoc.pl",
+			"GitHubUserName": "JacekSzlendak"
+		},
+		{
+			"SlackUserEmail": "j.mrowiec@perfectgym.com",
+			"GitHubUserName": "jareqpl"
+		},
+		{
+			"SlackUserEmail": "j.bortel@perfectgym.com",
+			"GitHubUserName": "jbortelpg"
+		},
+		{
+			"SlackUserEmail": "j.guc@creadhoc.pl",
+			"GitHubUserName": "jguc"
+		},
+		{
+			"SlackUserEmail": "j.krawczyk@creadhoc.pl",
+			"GitHubUserName": "jkrawczykpg"
+		},
+		{
+			"SlackUserEmail": "m.kaczynski@creadhoc.pl",
+			"GitHubUserName": "kaczynskim"
+		},
+		{
+			"SlackUserEmail": "k.kozub@perfectgym.com",
+			"GitHubUserName": "karolkozub-perfectgym"
+		},
+		{
+			"SlackUserEmail": "m.kedrzynski@creadhoc.pl",
+			"GitHubUserName": "kedrzu"
+		},
+		{
+			"SlackUserEmail": "k.kowal@perfectgym.com",
+			"GitHubUserName": "krzkowal"
+		},
+		{
+			"SlackUserEmail": "l.juroszek@perfectgym.com",
+			"GitHubUserName": "ljuroszekPerfectgym"
+		},
+		{
+			"SlackUserEmail": "m.sokolowski@perfectgym.com",
+			"GitHubUserName": "lukoos"
+		},
+		{
+			"SlackUserEmail": "m.stachyra@perfectgym.com",
+			"GitHubUserName": "m-stachyra"
+		},
+		{
+			"SlackUserEmail": "m.jaskiewicz@perfectgym.com",
+			"GitHubUserName": "maciejjaskiewicz"
+		},
+		{
+			"SlackUserEmail": "m.urbanczyk@perfectgym.com",
+			"GitHubUserName": "maciekurb"
+		},
+		{
+			"SlackUserEmail": "m.lach@perfectgym.com",
+			"GitHubUserName": "MarcinLeroomLach"
+		},
+		{
+			"SlackUserEmail": "m.mrozek@perfectgym.com",
+			"GitHubUserName": "mateuszmrozek"
+		},
+		{
+			"SlackUserEmail": "m.gluza@perfectgym.com",
+			"GitHubUserName": "mgluza"
+		},
+		{
+			"SlackUserEmail": "m.gredziak@perfectgym.com",
+			"GitHubUserName": "MichalGre"
+		},
+		{
+			"SlackUserEmail": "m.kwiecinski@perfectgym.com",
+			"GitHubUserName": "mkwie"
+		},
+		{
+			"SlackUserEmail": "m.wojcik@perfectgym.com",
+			"GitHubUserName": "mwojcik"
+		},
+		{
+			"SlackUserEmail": "m.zukow@perfectgym.com",
+			"GitHubUserName": "mzukow"
+		},
+		{
+			"SlackUserEmail": "n.czescik@perfectgym.com",
+			"GitHubUserName": "nczescik"
+		},
+		{
+			"SlackUserEmail": "m.niedabylski@perfectgym.com",
+			"GitHubUserName": "niedabylskim"
+		},
+		{
+			"SlackUserEmail": "n.zajac@perfectgym.com",
+			"GitHubUserName": "norbertzajac"
+		},
+		{
+			"SlackUserEmail": "p.owerko@perfectgym.com",
+			"GitHubUserName": "owerkop"
+		},
+		{
+			"SlackUserEmail": "k.kowalczyk@perfectgym.com",
+			"GitHubUserName": "Parry1993"
+		},
+		{
+			"SlackUserEmail": "m.parzyszek@perfectgym.com",
+			"GitHubUserName": "parzychu"
+		},
+		{
+			"SlackUserEmail": "p.bukowski@perfectgym.com",
+			"GitHubUserName": "pbukowskipg"
+		},
+		{
+			"SlackUserEmail": "p.dziarmaga@perfectgym.com",
+			"GitHubUserName": "pdziarmagapg"
+		},
+		{
+			"SlackUserEmail": "p.mieten@perfectgym.com",
+			"GitHubUserName": "pmieten"
+		},
+		{
+			"SlackUserEmail": "p.zbyszynski@creadhoc.pl",
+			"GitHubUserName": "pzbyszynski"
+		},
+		{
+			"SlackUserEmail": "r.jakubiec@perfectgym.com",
+			"GitHubUserName": "Rjakubiec"
+		},
+		{
+			"SlackUserEmail": "p.wojcik@perfectgym.com",
+			"GitHubUserName": "ryhumistrz"
+		},
+		{
+			"SlackUserEmail": "s.dzida@perfectgym.com",
+			"GitHubUserName": "sdzidapg"
+		},
+		{
+			"SlackUserEmail": "l.kowalski@perfectgym.com",
+			"GitHubUserName": "seppsher"
+		},
+		{
+			"SlackUserEmail": "t.slodyczka@perfectgym.com",
+			"GitHubUserName": "slodky"
+		},
+		{
+			"SlackUserEmail": "s.szalachowski@perfectgym.com",
+			"GitHubUserName": "sszalachowski"
+		},
+		{
+			"SlackUserEmail": "s.zawadzki@perfectgym.com",
+			"GitHubUserName": "szr3k"
+		},
+		{
+			"SlackUserEmail": "t.taras@perfectgym.com",
+			"GitHubUserName": "TTarasPG"
+		}
+	]
 }

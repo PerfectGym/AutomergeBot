@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Octokit;
+using PerfectGym.AutomergeBot.Notifications.SlackClient;
 using PerfectGym.AutomergeBot.Notifications.UserNotifications;
 using PerfectGym.AutomergeBot.RepositoryConnection;
 
@@ -33,15 +34,13 @@ namespace PerfectGym.AutomergeBot.Features.CodeReviewInspector
 
         public void StartWorker()
         {
-            _logger.LogInformation($"Loading configuration for {this.GetType().Name}");
-
             if (_cfg.CodeReviewInspectorConfiguration != null && _cfg.CodeReviewInspectorConfiguration.IsEnable)
             {
                 foreach (var time in _cfg.CodeReviewInspectorConfiguration.SendNotificationsToReviewersAtTimes)
                 {
                     if (TimeSpan.TryParse(time, out TimeSpan timeAsTimeSpan))
                     {
-                        _timeScheduler.ScheduledActions.Add(new TimeScheduler.ScheduleAction(timeAsTimeSpan, CheckWaitingPullRequestAndNotifyReviewers));
+                        _timeScheduler.ScheduledActions.Add(new TimeScheduler.ScheduleAction(timeAsTimeSpan, CheckOpenPullRequestsAndNotifyOwnersAndReviewers));
                     }
                     else
                     {
@@ -54,26 +53,18 @@ namespace PerfectGym.AutomergeBot.Features.CodeReviewInspector
             }
         }
         
-        private void CheckWaitingPullRequestAndNotifyReviewers()
+        private void CheckOpenPullRequestsAndNotifyOwnersAndReviewers()
         {
             _logger.LogInformation("CheckWaitingPullRequestAndNotifyReviewers");
             using (var repoContext = _repositoryConnectionProvider.GetRepositoryConnection())
             {
                 var openPullRequests = repoContext.GetOpenPullRequests();
-
-                var filteredPullRequests = FilterPullRequests(openPullRequests);
-                if (filteredPullRequests.Count > 0)
+                if (openPullRequests.Count > 0)
                 {
-                    _logger.LogInformation("Notifying users there is still open {count} pull requests", filteredPullRequests.Count);
-                    //TODO:Sending nottifications
+                    _userNotifier.SendDirectMessageAboutOpenPullRequests(openPullRequests);
                 }
             }
         }
-
-        private List<PullRequest> FilterPullRequests(IReadOnlyList<PullRequest> openPullRequests)
-        {
-            return openPullRequests.ToList();
-        }
-
+   
     }
 }

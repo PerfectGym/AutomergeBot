@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using PerfectGym.AutomergeBot.Notifications.SlackNotifications;
@@ -24,7 +25,9 @@ namespace PerfectGym.AutomergeBot.Tests
             var slackClientProvider = slackClientProviderMock.Object;
             var messageProvider = new SlackMessageProvider(new DateTimeNow());
 
-            var userNotifier = new UserNotifier(new NullLogger<UserNotifier>(),slackClientProvider, messageProvider);
+            var automergeBotConfigurationMock = new Mock<OptionsMonitor<AutomergeBotConfiguration>>();
+
+            var userNotifier = new UserNotifier(new NullLogger<UserNotifier>(),slackClientProvider, messageProvider, automergeBotConfigurationMock.Object);
             var repoContextMock = new Mock<IRepositoryConnectionContext>();
             repoContextMock.Setup(r=>r.AddPullRequestComment(It.IsAny<int>(),It.IsAny<string>()))
                 .Verifiable();

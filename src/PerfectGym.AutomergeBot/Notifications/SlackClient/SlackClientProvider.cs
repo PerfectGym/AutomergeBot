@@ -43,8 +43,7 @@ namespace PerfectGym.AutomergeBot.Notifications.SlackClient
 
         private bool IsSlackConfigured()
         {
-            return !string.IsNullOrWhiteSpace(_cfg.PullRequestGovernorConfiguration?.SlackToken) &&
-                   !string.IsNullOrWhiteSpace(_cfg.PullRequestGovernorConfiguration?.SlackChannels);
+            return !string.IsNullOrWhiteSpace(_cfg.PullRequestGovernorConfiguration?.SlackToken);
         }
 
 
@@ -52,7 +51,6 @@ namespace PerfectGym.AutomergeBot.Notifications.SlackClient
         {
             return _slackClientProvider.CreateClient(
                 _cfg.PullRequestGovernorConfiguration.SlackToken,
-                _cfg.PullRequestGovernorConfiguration.SlackChannels,
                 _cfg.AutomergeBotGitHubUserName,
                 GetSlackUserMappings());
         }
