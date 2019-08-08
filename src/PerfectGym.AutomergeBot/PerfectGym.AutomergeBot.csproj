@@ -44,10 +44,4 @@
     <ProjectReference Include="..\submodules\SlackClientStandard\SlackClientStandard\SlackClientStandard.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.Activities">
-      <HintPath>..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.Activities.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

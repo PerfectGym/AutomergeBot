@@ -19,8 +19,6 @@ namespace PerfectGym.AutomergeBot.Features.CodeReviewInspector
         {
             services.AddTransient<CodeReviewInspector>();
             services.Configure<CodeReviewInspectorConfiguration>(_configuration);
-            // services.AddTransient<IPullRequestReviewModelHandler, PullRequestReviewModelHandler>();
-            //services.Configure<CodeReviewInspectorConfiguration>(_configuration);
         }
     }
 }

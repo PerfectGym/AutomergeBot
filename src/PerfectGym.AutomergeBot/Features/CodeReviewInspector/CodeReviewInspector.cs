@@ -17,7 +17,7 @@ namespace PerfectGym.AutomergeBot.Features.CodeReviewInspector
         private readonly IUserNotifier _userNotifier;
         private readonly ILogger<CodeReviewInspector> _logger;
         private readonly AutomergeBotConfiguration _cfg;
-        TimeScheduler  _timeScheduler= new TimeScheduler();
+        private readonly TimeScheduler _timeScheduler = new TimeScheduler();
 
         public CodeReviewInspector(
             ILogger<CodeReviewInspector> logger,
@@ -34,9 +34,9 @@ namespace PerfectGym.AutomergeBot.Features.CodeReviewInspector
 
         public void StartWorker()
         {
-            if (_cfg.CodeReviewInspectorConfiguration != null && _cfg.CodeReviewInspectorConfiguration.IsEnable)
+            if (_cfg.CodeReviewInspectorConfiguration?.IsEnabled ?? false)
             {
-                foreach (var time in _cfg.CodeReviewInspectorConfiguration.SendNotificationsToReviewersAtTimes)
+                foreach (var time in _cfg.CodeReviewInspectorConfiguration.TimeDefinitionsWhenNotificationsAreSent)
                 {
                     if (TimeSpan.TryParse(time, out TimeSpan timeAsTimeSpan))
                     {
@@ -44,7 +44,8 @@ namespace PerfectGym.AutomergeBot.Features.CodeReviewInspector
                     }
                     else
                     {
-                        _logger.LogWarning("Could not parse time ({valeu}) form SendNotificationsToReviewersAtTimes. Expected format HH:MM", time);
+                      
+                        _logger.LogError($"Could not parse time ({{value}}) of configuration property '{nameof(CodeReviewInspectorConfiguration.TimeDefinitionsWhenNotificationsAreSent)}'. Expected format HH:MM", time);
                     }
 
                 }

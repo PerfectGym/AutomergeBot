@@ -6,8 +6,8 @@ namespace PerfectGym.AutomergeBot.Features.CodeReviewInspector
 {
     public class CodeReviewInspectorConfiguration
     {
-        public bool IsEnable { get; set; }
+        public bool IsEnabled { get; set; }
 
-        public List<string> SendNotificationsToReviewersAtTimes { get; set; }
+        public List<string> TimeDefinitionsWhenNotificationsAreSent { get; set; }
     }
 }

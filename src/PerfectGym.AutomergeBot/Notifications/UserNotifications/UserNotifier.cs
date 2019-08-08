@@ -128,35 +128,38 @@ namespace PerfectGym.AutomergeBot.Notifications.UserNotifications
             {
                 using (var client = _slackClientProvider.Create())
                 {
-                    SendDirectMessageAboutPullRequests("Your open pull requests:", notify.Login, notify.OwnPullRequests, client);
-                    Thread.Sleep(TimeSpan.FromSeconds(1));
+                    SendDirectMessageAboutPullRequests("Your open pull requests:", notify.GitHubLogin, notify.OwnPullRequests, client);
 
-                    SendDirectMessageAboutPullRequests("The pull requests waiting for your review:", notify.Login, notify.PullRequestsToReview, client);
-
-                    Thread.Sleep(TimeSpan.FromSeconds(1));
-
+                    SendDirectMessageAboutPullRequests("The pull requests waiting for your review:", notify.GitHubLogin, notify.PullRequestsToReview, client);
                 }
 
             }
         }
 
-        private void SendDirectMessageAboutPullRequests(string headOfmessage, string login, IEnumerable<PullRequest> pullRequests, ISlackClient client)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="headOfmessage"></param>
+        /// <param name="user">Github user login  or Slack RealName or Slack email</param>
+        /// <param name="pullRequests"></param>
+        /// <param name="client"></param>
+        private void SendDirectMessageAboutPullRequests(string headOfmessage, string user, IEnumerable<PullRequest> pullRequests, ISlackClient client)
         {
             if (pullRequests!=null && pullRequests.Any())
             {
                 var message = _messageProvider.CreatePullRequestMessage(
                     headOfmessage,
-                    login,
+                    user,
                     pullRequests
                 );
 
                 try
                 {
-                    client.SendMessageToUser(message, login);
+                    client.SendMessageToUser(message, user);
                 }
                 catch (SlackApiErrorException e)
                 {
-                    _logger.LogError(e, "Failed notifying user {User}", login);
+                    _logger.LogError(e, "Failed notifying user {User}", user);
                 }
             }
         }
@@ -168,7 +171,7 @@ namespace PerfectGym.AutomergeBot.Notifications.UserNotifications
             {
                 result.Add(new NotificationsAboutOpenPullRequest()
                 {
-                   Login = pr.Key,
+                   GitHubLogin = pr.Key,
                    OwnPullRequests = pr.ToList(),
                    PullRequestsToReview = pullRequests.Where(r=>r.RequestedReviewers.Any(a=>a.Login==pr.Key)).ToList()
                 });
@@ -178,11 +181,11 @@ namespace PerfectGym.AutomergeBot.Notifications.UserNotifications
             foreach (var user in pullRequests
                 .SelectMany(r=>r.RequestedReviewers.Select(rr=>rr.Login))
                 .Distinct()
-                .Except(result.Select(r=>r.Login)).ToList())
+                .Except(result.Select(r=>r.GitHubLogin)).ToList())
             {
                 result.Add(new NotificationsAboutOpenPullRequest()
                 {
-                    Login = user,
+                    GitHubLogin = user,
                     OwnPullRequests = new List<PullRequest>(),
                     PullRequestsToReview = pullRequests.Where(r => r.RequestedReviewers.Any(a => a.Login == user)).ToList()
                 });
@@ -194,7 +197,7 @@ namespace PerfectGym.AutomergeBot.Notifications.UserNotifications
 
         public class NotificationsAboutOpenPullRequest
         {
-            public string Login { get; set; }
+            public string GitHubLogin { get; set; }
             public IEnumerable<PullRequest> OwnPullRequests { get; set; }
             public IEnumerable<PullRequest> PullRequestsToReview { get; set; }
         }

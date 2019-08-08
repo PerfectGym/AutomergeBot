@@ -82,12 +82,12 @@ namespace PerfectGym.AutomergeBot
             LogConfigurationUsed(app.ApplicationServices, logger);
 
             StartPullRequestsGovernor(app);
-            StartStartCodeReviewInspector(app);
+            StartCodeReviewInspector(app);
             app.Run(HandleRequest);
             logger.LogInformation("Started");
         }
 
-        private void StartStartCodeReviewInspector(IApplicationBuilder app)
+        private void StartCodeReviewInspector(IApplicationBuilder app)
         {
             var codeReviewInspector = app.ApplicationServices.GetRequiredService<CodeReviewInspector>();
             codeReviewInspector.StartWorker();
