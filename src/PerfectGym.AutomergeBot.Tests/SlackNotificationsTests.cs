@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
+using Microsoft.Extensions.Options;
 using PerfectGym.AutomergeBot.Notifications.SlackNotifications;
 using PerfectGym.AutomergeBot.Notifications.UserNotifications;
 using ISlackClientProvider = PerfectGym.AutomergeBot.Notifications.SlackClient.ISlackClientProvider;
@@ -22,7 +23,7 @@ namespace PerfectGym.AutomergeBot.Tests
         {
             //Arrange
             var slackClientMock = new Mock<ISlackClient>();
-            slackClientMock.Setup(c=>c.SendMessage(It.IsAny<string>()))
+            slackClientMock.Setup(c=>c.SendMessageToChannels(It.IsAny<string>(), It.IsAny<string[]>()))
                 .Verifiable();
             var slackClient=slackClientMock.Object;
 
@@ -36,17 +37,21 @@ namespace PerfectGym.AutomergeBot.Tests
             nowMock.Setup(n => n.Now())
                 .Returns(DateTimeOffset.MinValue);
 
-            var userNotifier = new UserNotifier(new NullLogger<UserNotifier>(),slackClientProvider, new SlackMessageProvider(nowMock.Object));
+
+            var automergeBotConfigurationMock = new Mock<OptionsMonitor<AutomergeBotConfiguration>>();
+
+            var userNotifier = new UserNotifier(new NullLogger<UserNotifier>(),slackClientProvider, new SlackMessageProvider(nowMock.Object)
+                , automergeBotConfigurationMock.Object);
             var pullRequests = GetFakePRCollection().ToList();
             
             //Act
-            userNotifier.NotifyAboutOpenPullRequests(pullRequests);
+            userNotifier.NotifyAboutOpenAutoMergePullRequests(pullRequests);
 
             //Assert
             var usersPullRequestsCount = pullRequests.Count();
-            slackClientMock.Verify(c=>c.SendMessage(It.Is<string>(m =>
+            slackClientMock.Verify(c=>c.SendMessageToChannels(It.Is<string>(m =>
                 CountStringOccurrences(WebUtility.UrlDecode(m), "PR open for")==usersPullRequestsCount
-                )),Times.Once);
+                ),It.IsAny<string[]>()),Times.Once);
 
         }
 

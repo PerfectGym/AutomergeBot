@@ -157,5 +157,11 @@ namespace PerfectGym.AutomergeBot.RepositoryConnection
         {
             return Exec(r => r.GetPullRequest(pullRequestNumber));
         }
+
+        public IReadOnlyList<PullRequestReview> GetReviewsForPullRequest(int pullRequestNumber)
+        {
+            return Exec(r => r.GetReviewsForPullRequest(pullRequestNumber));
+        }
+
     }
 }

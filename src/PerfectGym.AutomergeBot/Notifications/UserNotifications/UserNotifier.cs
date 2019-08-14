@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Activities.Expressions;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Octokit;
 using PerfectGym.AutomergeBot.Notifications.SlackNotifications;
 using PerfectGym.AutomergeBot.RepositoryConnection;
@@ -21,23 +25,31 @@ namespace PerfectGym.AutomergeBot.Notifications.UserNotifications
             string destinationBranch,
             string pullRequestUrl);
 
-        void NotifyAboutOpenPullRequests(IEnumerable<PullRequest> filteredPullRequests);
+        void NotifyAboutOpenAutoMergePullRequests(IEnumerable<PullRequest> filteredPullRequests);
+
+
+        void SendDirectMessageAboutOpenPullRequests(IEnumerable<PullRequest> pullRequests);
+
     }
 
     public class UserNotifier : IUserNotifier
     {
         private readonly ILogger<UserNotifier> _logger;
-        private readonly ISlackClientProvider _clientProvider;
+        private readonly ISlackClientProvider _slackClientProvider;
         private readonly ISlackMessageProvider _messageProvider;
+        private readonly AutomergeBotConfiguration _cfg;
 
         public UserNotifier(
             ILogger<UserNotifier> logger,
-            ISlackClientProvider clientProvider,
-            ISlackMessageProvider messageProvider)
+            ISlackClientProvider slackClientProvider,
+            ISlackMessageProvider messageProvider,
+            IOptionsMonitor<AutomergeBotConfiguration> cfg
+            )
         {
             _logger = logger;
-            _clientProvider = clientProvider;
+            _slackClientProvider = slackClientProvider;
             _messageProvider = messageProvider;
+            _cfg = cfg.CurrentValue;
         }
 
         public void NotifyUserAboutPullRequestWithUnresolvedConflicts(
@@ -85,14 +97,14 @@ namespace PerfectGym.AutomergeBot.Notifications.UserNotifications
             return File.ReadAllText(path);
         }
 
-        public void NotifyAboutOpenPullRequests(IEnumerable<PullRequest> filteredPullRequests)
+        public void NotifyAboutOpenAutoMergePullRequests(IEnumerable<PullRequest> filteredPullRequests)
         {
             var pullRequests = filteredPullRequests.ToList();
             var users = pullRequests.SelectMany(pr => pr.Assignees)
                                               .Distinct(new UserComparer())
                                               .ToList();
 
-            using (var client = _clientProvider.Create())
+            using (var client = _slackClientProvider.Create())
             {
                 foreach (var user in users)
                 {
@@ -110,15 +122,96 @@ namespace PerfectGym.AutomergeBot.Notifications.UserNotifications
             }
         }
 
+        public void SendDirectMessageAboutOpenPullRequests(IEnumerable<PullRequest> pullRequests)
+        {
+            foreach (var notify in GetNotificationsAboutOpenPullRequest(pullRequests))
+            {
+                using (var client = _slackClientProvider.Create())
+                {
+                    SendDirectMessageAboutPullRequests("Your open pull requests:", notify.GitHubLogin, notify.OwnPullRequests, client);
+
+                    SendDirectMessageAboutPullRequests("The pull requests waiting for your review:", notify.GitHubLogin, notify.PullRequestsToReview, client);
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="headOfmessage"></param>
+        /// <param name="user">Github user login  or Slack RealName or Slack email</param>
+        /// <param name="pullRequests"></param>
+        /// <param name="client"></param>
+        private void SendDirectMessageAboutPullRequests(string headOfmessage, string user, IEnumerable<PullRequest> pullRequests, ISlackClient client)
+        {
+            if (pullRequests!=null && pullRequests.Any())
+            {
+                var message = _messageProvider.CreatePullRequestMessage(
+                    headOfmessage,
+                    user,
+                    pullRequests
+                );
+
+                try
+                {
+                    client.SendMessageToUser(message, user);
+                }
+                catch (SlackApiErrorException e)
+                {
+                    _logger.LogError(e, "Failed notifying user {User}", user);
+                }
+            }
+        }
+
+        private IEnumerable<NotificationsAboutOpenPullRequest> GetNotificationsAboutOpenPullRequest(IEnumerable<PullRequest> pullRequests)
+        {
+            var result = new List<NotificationsAboutOpenPullRequest>();
+            foreach (var pr in pullRequests.GroupBy(t=>t.User.Login))
+            {
+                result.Add(new NotificationsAboutOpenPullRequest()
+                {
+                   GitHubLogin = pr.Key,
+                   OwnPullRequests = pr.ToList(),
+                   PullRequestsToReview = pullRequests.Where(r=>r.RequestedReviewers.Any(a=>a.Login==pr.Key)).ToList()
+                });
+            }
+
+            //Create notify for users that do not have own pull requests
+            foreach (var user in pullRequests
+                .SelectMany(r=>r.RequestedReviewers.Select(rr=>rr.Login))
+                .Distinct()
+                .Except(result.Select(r=>r.GitHubLogin)).ToList())
+            {
+                result.Add(new NotificationsAboutOpenPullRequest()
+                {
+                    GitHubLogin = user,
+                    OwnPullRequests = new List<PullRequest>(),
+                    PullRequestsToReview = pullRequests.Where(r => r.RequestedReviewers.Any(a => a.Login == user)).ToList()
+                });
+            }
+
+
+            return result;
+        }
+
+        public class NotificationsAboutOpenPullRequest
+        {
+            public string GitHubLogin { get; set; }
+            public IEnumerable<PullRequest> OwnPullRequests { get; set; }
+            public IEnumerable<PullRequest> PullRequestsToReview { get; set; }
+        }
+
+
+
         private void NotifyAssignedUsersBySlack(Account user, IEnumerable<PullRequest> pullRequests, ISlackClient client)
         {
             var prs = pullRequests.Select(pr => new PullRequestModel { Url = pr.HtmlUrl, CreatedAt = pr.CreatedAt });
             var contact = user.Email ?? user.Login;
             var author = client.FindUser(contact);
             var message = _messageProvider.CreateNotifyUserAboutPendingPullRequestMessage(author, prs);
-            client.SendMessage(message);
+            client.SendMessageToChannels(message, _cfg.PullRequestGovernorConfiguration.GetSlackChannelsParsed());
         }
-
     }
 
     internal class UserComparer : IEqualityComparer<User>

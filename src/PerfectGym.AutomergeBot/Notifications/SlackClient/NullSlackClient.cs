@@ -8,8 +8,14 @@ namespace PerfectGym.AutomergeBot.Notifications.SlackClient
         {
             //nop
         }
+        
 
-        public void SendMessage(string message)
+        public void SendMessageToChannels(string message, string[] channels)
+        {
+            //nop
+        }
+
+        public void SendMessageToUser(string message, string user)
         {
             //nop
         }

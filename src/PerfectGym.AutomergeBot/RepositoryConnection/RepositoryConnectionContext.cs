@@ -200,6 +200,19 @@ namespace PerfectGym.AutomergeBot.RepositoryConnection
             return result;
         }
 
+        public IReadOnlyList<PullRequestReview> GetReviewsForPullRequest(int pullRequestNumber)
+        {
+            _logger.LogDebug("Getting reviews for pull request {pullRequestNumber}", pullRequestNumber);
+
+            var client = CreateGitHubClient();
+            var result = client.PullRequest.Review.GetAll(_repositoryOwner,_repositoryName, pullRequestNumber)
+                .Result;
+            return result;
+        }
+
+        
+
+
 
         /// <summary>
         /// Removes "refs/" prefix from git ref string.

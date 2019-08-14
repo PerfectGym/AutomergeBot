@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Octokit;
 
 namespace PerfectGym.AutomergeBot.Notifications.SlackNotifications
 {
@@ -35,6 +36,33 @@ namespace PerfectGym.AutomergeBot.Notifications.SlackNotifications
 
             return WebUtility.UrlEncode(stringBuilder.ToString());
         }
+
+
+        public string CreatePullRequestMessage(
+            string headerOfMessage,
+            string authorId,
+            IEnumerable<PullRequest> pullRequests)
+        {
+            var stringBuilder = new StringBuilder();
+
+            stringBuilder.AppendLine(
+                $"<@{authorId}> {headerOfMessage}");
+            var pullRequestsOrdered = pullRequests.OrderBy(pr => pr.CreatedAt)
+                .ToList();
+
+            foreach (var pullRequestUrl in pullRequestsOrdered)
+            {
+                var duration = _now.Now() - pullRequestUrl.CreatedAt;
+                stringBuilder.Append($"{duration.FormatAsDescriptiveForHuman()}");
+                stringBuilder.Append(pullRequestUrl.HtmlUrl);
+                stringBuilder.Append(" ");
+                stringBuilder.AppendLine(pullRequestUrl.Title);
+            }
+
+            return WebUtility.UrlEncode(stringBuilder.ToString());
+        }
+
+
     }
 
     internal static class TimeSpanExt

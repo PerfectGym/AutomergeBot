@@ -1,23 +1,27 @@
 ﻿{
-    "CreatedBranchesPrefix": "AutomergeBot/",
-    "AutomergeBotGitHubUserName": "AutoMergeBot", //account name used by AutomergeBot (it is used to distinguish commits made by humans from created by us)
-    "RepositoryName": null,
-    "RepositoryOwner": null,
-    "AuthToken": null,//access token generated in GitHub for user account used by AutomergeBot
-    "WebHookSecret": null,//secret configured in GitHub when adding web hook url
-    "MergeDirections": [], //  eg. ["R75->R75.1", "R75.1->R75.2"] //updating this setting does not require AutomergeBot restart, it is automatically reloaded - check logs!
-    "AutomergeOnlyForAuthors": [], //eg.  ["githubUserName"] or leave it empty
-    "SeqUrl": null, // optional URL to Seq (http://getseq.net)
-    "PullRequestGovernorConfiguration": {
-        "SlackChannels": null, //multiple channels can be set, seperated with commas
-        "PullRequestTimeLimit": null, //determines how long PR can remain open, before notifications will be send, eg. "01:00:00"
-        "CheckFrequency": null, //determines how often PRs are checked, eg. "00:15:00"
-        "SlackToken": null // to get it: create new Slack application, give it permissions needed by SlackClientStandard (currently: users:read, chat:write:bot) than deploy to the workspace
-    },
-	"AdditionalCodeReviewConfiguration":{ // This feature requires selected the webhook event: Pull request reviews (Repository->Settings->Webhooks->[+] Pull request reviews)
-		"AdditionalReviewProbability":"0", //0-100 
-		"Reviewers": [],// eg. ["pawelmieten","owerkop"]
-		"NeedAdditionalReviewLabel":"AdditionalReview", //Label name for PR where is need additional review
-		"NoNeedAdditionalReviewLabel":"NoAdditionalReview" //Label name for PR where is NOT need additional review
-	}	
+  "CreatedBranchesPrefix": "AutomergeBot/",
+  "AutomergeBotGitHubUserName": "AutoMergeBot", //account name used by AutomergeBot (it is used to distinguish commits made by humans from created by us)
+  "RepositoryName": null,
+  "RepositoryOwner": null,
+  "AuthToken": null, //access token generated in GitHub for user account used by AutomergeBot
+  "WebHookSecret": null, //secret configured in GitHub when adding web hook url
+  "MergeDirections": [], //  eg. ["R75->R75.1", "R75.1->R75.2"] //updating this setting does not require AutomergeBot restart, it is automatically reloaded - check logs!
+  "AutomergeOnlyForAuthors": [], //eg.  ["githubUserName"] or leave it empty
+  "SeqUrl": null, // optional URL to Seq (http://getseq.net)
+  "PullRequestGovernorConfiguration": {
+    "SlackChannels": null, //multiple channels can be set, seperated with commas
+    "PullRequestTimeLimit": null, //determines how long PR can remain open, before notifications will be send, eg. "01:00:00"
+    "CheckFrequency": null, //determines how often PRs are checked, eg. "00:15:00"
+    "SlackToken": null // to get it: create new Slack application, give it permissions needed by SlackClientStandard (currently: users:read, chat:write:bot) than deploy to the workspace
+  },
+  "AdditionalCodeReviewConfiguration": { // This feature requires selected the webhook event: Pull request reviews (Repository->Settings->Webhooks->[+] Pull request reviews)
+    "AdditionalReviewProbability": "0", //0-100
+    "Reviewers": [], // eg. ["pawelmieten","owerkop"]
+    "NeedAdditionalReviewLabel": "AdditionalReview", //Label name for PR where is need additional review
+    "NoNeedAdditionalReviewLabel": "NoAdditionalReview" //Label name for PR where is NOT need additional review
+  },
+  "CodeReviewInspectorConfiguration": {
+    "IsEnabled": "true",
+    "TimeDefinitionsWhenNotificationsAreSent": [ "07:00", "13:35", "16:00" ]
+  }
 }
