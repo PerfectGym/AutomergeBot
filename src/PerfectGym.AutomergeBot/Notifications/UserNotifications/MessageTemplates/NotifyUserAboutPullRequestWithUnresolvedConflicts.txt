@@ -9,7 +9,7 @@ Github does not update it and lies that conflicts are present.
 **How to do it** (using the **GIT Bash** command line):
 1. Merge code from `{{destinationBranch}}` into your pull request and resolve conflicts.
    ```
-   git fetch -q && git checkout -q -B {{pullRequestBranchName}} origin/{{destinationBranch}} && git merge --no-ff origin/{{pullRequestBranchName}} 
+   git fetch -q && git checkout --no-track -q -B {{pullRequestBranchName}} origin/{{destinationBranch}} && git merge --no-ff origin/{{pullRequestBranchName}} 
    ```
    >Explanation: we do small hack here - PR's branch locally reset to destination branch and then merge PR's actual branch to it.
 2. Push the code with resolved conflicts
@@ -27,21 +27,3 @@ Merge manualy [pull request]({{pullRequestUrl}}).
    ```
    git checkout - && git branch -D {{pullRequestBranchName}}
    ```
------
-
-If the instruction above from some reason is not working for You please try to use older instruction
-
-**Important: tell about it on #developers-news !**
-*The old instruction will be removed soon...*
-
->1. Fetch changes from server and checkout '{{destinationBranch}}' branch.
->   Then merge 'origin/{{pullRequestBranchName}}' branch and resolve conflicts
->   ```
->   git fetch -q && git checkout -q {{destinationBranch}} && git reset -q --hard @{u} && git merge --no-ff origin/{{pullRequestBranchName}}
->   ```
->2. Approve [pull request]({{pullRequestUrl}}/files#submit-review) review
->3. Push changes to {{destinationBranch}}
->   ```
->   git push origin {{destinationBranch}}
->   ```
-
