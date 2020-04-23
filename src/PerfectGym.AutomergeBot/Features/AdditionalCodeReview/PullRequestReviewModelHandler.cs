@@ -58,7 +58,9 @@ namespace PerfectGym.AutomergeBot.Features.AdditionalCodeReview
                     if (reviewer != null)
                     {
                         CreateReviewRequestAndAddLabel(repoContext, prReviewModel, reviewer);
-                    }else
+                        AddCommentToNotifyHuman(repoContext,prReviewModel, reviewer);
+                    }
+                    else
                     {
                          AddNoNeedAdditionalReviewLabel(repoContext, prReviewModel);
                     }
@@ -94,6 +96,11 @@ namespace PerfectGym.AutomergeBot.Features.AdditionalCodeReview
                     prReviewModel.PullRequestNumber, reviewer,
                     conf.NeedAdditionalReviewLabel);
             }
+        }
+
+        private void AddCommentToNotifyHuman(IRepositoryConnectionContext repoContext, PullRequestReviewInfoModel prReviewModel, string reviewer)
+        {
+            repoContext.AddPullRequestComment(prReviewModel.PullRequestNumber,$"@{reviewer} please do extra review.");
         }
 
         private void AddNoNeedAdditionalReviewLabel(IRepositoryConnectionContext repoContext, PullRequestReviewInfoModel pullRequestReviewInfoModel)
