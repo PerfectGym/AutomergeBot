@@ -20,6 +20,11 @@ namespace PerfectGym.AutomergeBot.Notifications.SlackClient
             //nop
         }
 
+        public void SendMessage(string message)
+        {
+            //nop
+        }
+
         public string FindUser(string user)
         {
             return string.Empty;

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Activities.Expressions;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Octokit;

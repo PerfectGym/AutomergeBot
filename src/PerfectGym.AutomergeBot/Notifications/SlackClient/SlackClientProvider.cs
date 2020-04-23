@@ -52,7 +52,7 @@ namespace PerfectGym.AutomergeBot.Notifications.SlackClient
             return _slackClientProvider.CreateClient(
                 _cfg.PullRequestGovernorConfiguration.SlackToken,
                 _cfg.AutomergeBotGitHubUserName,
-                GetSlackUserMappings());
+                mappings: GetSlackUserMappings());
         }
 
         private List<SlackUserMapping> GetSlackUserMappings()
